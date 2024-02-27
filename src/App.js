@@ -10,7 +10,7 @@ function App() {
     <BrowserRouter>
     <Routes>
       <Route path="/cone" element={<Viewer />} />
-      <Route path='/' element={<Render3D />} />
+      <Route path='/render3d' element={<Render3D />} />
     </Routes>
     </BrowserRouter>
     </div>

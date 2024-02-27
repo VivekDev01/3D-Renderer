@@ -43,15 +43,18 @@ const Render3D = () => {
     }
 
     try {
-      await materialsReader.setUrl('./assets/ferrari-f1-race-car.mtl');
+      materialsReader.setUrl('/space.mtl').then( async ()=>{
       console.log('MTL file loaded.');
-      await reader.setUrl('./assets/ferrari-f1-race-car.obj');
+      await reader.setUrl('/space.obj');
       console.log('obj file loaded.');
 
       const size = reader.getNumberOfOutputPorts();
+      console.log("size", size)
       for (let i = 0; i < size; i++) {
         const polydata = reader.getOutputData(i);
+        console.log(polydata.get('name').name)
         const name = polydata.get('name').name;
+        console.log(materialsReader.getMaterial(name))
         const mapper = vtkMapper.newInstance();
         const actor = vtkActor.newInstance();
 
@@ -61,6 +64,7 @@ const Render3D = () => {
         materialsReader.applyMaterialToActor(name, actor);
         renderer.addActor(actor);
 
+        // console.log("name", name)
         scene.push({ name, polydata, mapper, actor });
       }
       resetCamera();
@@ -83,6 +87,8 @@ const Render3D = () => {
         el.onclick = onClick;
       }
       console.log('Renderer initialization complete.');
+      })
+      
     } catch (error) {
       console.error('Error initializing 3D renderer:', error);
     }
