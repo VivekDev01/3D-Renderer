@@ -58,10 +58,10 @@ const UploadJSONAndRender3D = () => {
     try {
         const jsonText = await readFileAsText(jsonFile);
         const jsonData = JSON.parse(jsonText);
-        const objText = jsonData.objContent;
+        const objText = jsonData.obj;
         console.log(objText)
         reader.parseAsText(objText);
-        const mtlText = jsonData.mtlContent;
+        const mtlText = jsonData.mtl;
         console.log(mtlText)
         materialsReader.parseAsText(mtlText);
         
