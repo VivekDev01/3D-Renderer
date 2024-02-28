@@ -1,18 +1,20 @@
 import logo from './logo.svg';
 import './App.css';
 import {BrowserRouter ,Routes, Route} from 'react-router-dom';
-import Viewer from './Viewer';
-import Render3D from './Render3D';
-import UploadAndRender3D from './UploadAndRender3D';
+import ConeRender3D from './ConeRender3D';
+import ReadAndRender3D from './ReadAndRender3D';
+import UploadOBJandSTLAndRender3D from './UploadOBJandSTLAndRender3D';
+import UploadJSONAndRender3D from './UploadJSONAndRender3D';
 
 function App() {
   return (
     <div className="App">
     <BrowserRouter>
     <Routes>
-      <Route path="/cone" element={<Viewer />} />
-      <Route path='/render3d' element={<Render3D />} />
-      <Route path='/' element={<UploadAndRender3D />} />
+      <Route path="/cone" element={<ConeRender3D />} />
+      <Route path='/read' element={<ReadAndRender3D />} />
+      <Route path='/upload-obj-stl' element={<UploadOBJandSTLAndRender3D />} />
+      <Route path='/' element={<UploadJSONAndRender3D />} />
     </Routes>
     </BrowserRouter>
     </div>

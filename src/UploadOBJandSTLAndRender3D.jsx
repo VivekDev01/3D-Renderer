@@ -4,9 +4,8 @@ import vtkFullScreenRenderWindow from '@kitware/vtk.js/Rendering/Misc/FullScreen
 import vtkMapper from '@kitware/vtk.js/Rendering/Core/Mapper';
 import vtkMTLReader from '@kitware/vtk.js/IO/Misc/MTLReader';
 import vtkOBJReader from '@kitware/vtk.js/IO/Misc/OBJReader';
-import { strFromU8, unzipSync } from 'fflate';
 
-const UploadAndRender3D = () => {
+const UploadOBJandSTLAndRender3D = () => {
   const containerRef = useRef(null);
   const objInputRef = useRef(null);
   const mtlInputRef = useRef(null);
@@ -138,4 +137,4 @@ const UploadAndRender3D = () => {
   );
 };
 
-export default UploadAndRender3D;
+export default UploadOBJandSTLAndRender3D;

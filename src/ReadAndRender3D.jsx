@@ -7,7 +7,7 @@ import vtkMapper from '@kitware/vtk.js/Rendering/Core/Mapper';
 import vtkMTLReader from '@kitware/vtk.js/IO/Misc/MTLReader';
 import vtkOBJReader from '@kitware/vtk.js/IO/Misc/OBJReader';
 
-const Render3D = () => {
+const ReadAndRender3D = () => {
   const containerRef = useRef(null);
 
   const initialize3DRenderer = async () => {
@@ -43,9 +43,9 @@ const Render3D = () => {
     }
 
     try {
-      materialsReader.setUrl('/space.mtl').then( async ()=>{
+      materialsReader.setUrl('/WoodTexture.mtl').then( async ()=>{
       console.log('MTL file loaded.');
-      await reader.setUrl('/space.obj');
+      await reader.setUrl('/WoodTexture.obj');
       console.log('obj file loaded.');
 
       const size = reader.getNumberOfOutputPorts();
@@ -109,4 +109,4 @@ const Render3D = () => {
   )
 };
 
-export default Render3D;
+export default ReadAndRender3D;
