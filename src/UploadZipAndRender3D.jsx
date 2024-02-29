@@ -44,39 +44,19 @@ const UploadZipAndRender3D = () => {
       render();
     }
 
-    const readFileAsText = (file) => {
-        return new Promise((resolve, reject) => {
-          const reader = new FileReader();
-          reader.onload = (event) => {
-            resolve(event.target.result);
-          };
-          reader.onerror = (error) => {
-            reject(error);
-          };
-          reader.readAsText(file);
-        });
-      };
-      
-
     try {
-        const jsonText = await readFileAsText(jsonFile);
-        const jsonData = JSON.parse(jsonText);
-        const objText = jsonData.obj;
-        console.log(objText)
+        const jsonText = jsonFile.jsonData
+        const objText = jsonText.obj;
         reader.parseAsText(objText);
-        const mtlText = jsonData.mtl;
-        console.log(mtlText)
+        const mtlText = jsonText.mtl;
         materialsReader.parseAsText(mtlText);
         
-
 
         const size = reader.getNumberOfOutputPorts();
         console.log('size', size);
         for (let i = 0; i < size; i++) {
             const polydata = reader.getOutputData(i);
-            console.log(polydata.get('name').name);
             const name = polydata.get('name').name;
-            console.log(materialsReader.getMaterial(name));
             const mapper = vtkMapper.newInstance();
             const actor = vtkActor.newInstance();
 
@@ -130,12 +110,13 @@ const UploadZipAndRender3D = () => {
             if (filename.endsWith('.json')) {
               const jsonContent = await zip.files[filename].async('string');
               const jsonData = JSON.parse(jsonContent);
-              return { filename, jsonData };
+              return { jsonData };
             }
           });
           const extractedJsonData = await Promise.all(promises);
           setJsonFiles(extractedJsonData);
           console.log('Extracted JSON Files.');
+          initialize3DRenderer(extractedJsonData[0])
         } catch (error) {
           console.error('Error extracting or processing files:', error);
         }
@@ -146,16 +127,12 @@ const UploadZipAndRender3D = () => {
       console.error('Please select the ZIP file.');
     }
   };
-  
-  
+
 
   useEffect(()=>{
-    if(jsonFiles){
-      jsonFiles.forEach((jsonFile)=>{
-        console.log(jsonFile)
-      })
-    }
+    console.log(jsonFiles)
   }, [jsonFiles])
+
 
   return (
     <>

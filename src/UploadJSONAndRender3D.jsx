@@ -57,12 +57,12 @@ const UploadJSONAndRender3D = () => {
 
     try {
         const jsonText = await readFileAsText(jsonFile);
+        console.log(jsonText)
         const jsonData = JSON.parse(jsonText);
+        console.log(jsonData)
         const objText = jsonData.obj;
-        console.log(objText)
         reader.parseAsText(objText);
         const mtlText = jsonData.mtl;
-        console.log(mtlText)
         materialsReader.parseAsText(mtlText);
         
 
@@ -71,9 +71,7 @@ const UploadJSONAndRender3D = () => {
         console.log('size', size);
         for (let i = 0; i < size; i++) {
             const polydata = reader.getOutputData(i);
-            console.log(polydata.get('name').name);
             const name = polydata.get('name').name;
-            console.log(materialsReader.getMaterial(name));
             const mapper = vtkMapper.newInstance();
             const actor = vtkActor.newInstance();
 
@@ -115,6 +113,8 @@ const UploadJSONAndRender3D = () => {
     const jsonFile = JsonInputRef.current.files[0];
 
     if (jsonFile) {
+      console.log(typeof(jsonFile))
+      console.log(jsonFile)
       initialize3DRenderer(jsonFile);
     } else {
       console.error('Please select the JSON file.');
