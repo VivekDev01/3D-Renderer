@@ -112,37 +112,44 @@ const UploadZipAndRender3D = () => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit=async(e)=>{
     e.preventDefault();
-
+  
     const file = zipInputRef.current.files[0];
-
-    if(file){
+  
+    if (file){
       const reader = new FileReader();
-
-      reader.onload = function (event) {
+  
+      reader.onload = async function (event){
         const zipData = event.target.result;
-        JSZip.loadAsync(zipData)
-          .then(function (zip) {
-            const ExtractedJsonFiles = Object.keys(zip.files).filter(function (filename) {
-              return filename.endsWith('.json');
-            });
-            setJsonFiles(ExtractedJsonFiles)            
-          })
-          .catch(function (error) {
-            console.error('Error extracting files:', error);
+  
+        try{
+          const zip = await JSZip.loadAsync(zipData);
+  
+          const promises = Object.keys(zip.files).map(async (filename) => {
+            if (filename.endsWith('.json')) {
+              const jsonContent = await zip.files[filename].async('string');
+              const jsonData = JSON.parse(jsonContent);
+              return { filename, jsonData };
+            }
           });
-      }
+          const extractedJsonData = await Promise.all(promises);
+          setJsonFiles(extractedJsonData);
+          console.log('Extracted JSON Files.');
+        } catch (error) {
+          console.error('Error extracting or processing files:', error);
+        }
+      };
 
       reader.readAsArrayBuffer(file);
-    }
-    else{
-      console.error('Please select the JSON file.');
+    } else {
+      console.error('Please select the ZIP file.');
     }
   };
+  
+  
 
   useEffect(()=>{
-    // console.log(jsonFiles)
     if(jsonFiles){
       jsonFiles.forEach((jsonFile)=>{
         console.log(jsonFile)
