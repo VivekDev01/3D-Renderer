@@ -1,6 +1,5 @@
 import React, { useRef, useState } from 'react';
 import JSZip from 'jszip';
-import { useEffect } from 'react';
 import JsonFileRenderer from './components/JsonFileRenderer';
 
 const UploadZipAndRender3D = () => {
@@ -45,8 +44,22 @@ const UploadZipAndRender3D = () => {
 
 
   return (
-    <>
-      <form onSubmit={handleSubmit}>
+    <div style={{
+        display:"flex",
+        flexDirection:"column",
+        justifyContent:"center",
+        alignItems:"center",
+    }}>
+      <form style={{
+        height:"30vh",
+        width:"50%",
+        display:"flex",
+        flexDirection:"column",
+        justifyContent:"center",
+        alignItems:"center",
+        border:"1px solid black",
+        marginBottom:"10px"
+      }} onSubmit={handleSubmit}>
         <label>
           Select a .zip File:
           <input type="file" accept=".zip" ref={zipInputRef} />
@@ -57,14 +70,10 @@ const UploadZipAndRender3D = () => {
 
       
       <div>
-        {jsonFiles.map((jsonFile, index)=>(
-          <div key={index} >
-            <JsonFileRenderer jsonFile={jsonFile} />
-          </div>
-        ))}
+        {jsonFiles.length>0 && <JsonFileRenderer jsonFiles={jsonFiles} />}
       </div>
       
-    </>
+    </div>
   );
 };
 

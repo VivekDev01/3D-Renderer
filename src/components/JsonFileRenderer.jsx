@@ -10,7 +10,7 @@ const JsonFileRenderer = (props) => {
   const containerRef = useRef(null);
 
 
-    const initialize3DRenderer = async (jsonFile) => {
+    const initialize3DRenderer = async (jsonFiles) => {
         console.log('Initializing 3D renderer...');
         const fullScreenRenderer = vtkFullScreenRenderWindow.newInstance({
           container: containerRef.current,
@@ -43,32 +43,35 @@ const JsonFileRenderer = (props) => {
         }
     
         try {
-            const jsonText = jsonFile.jsonData
-            const objText = jsonText.obj;
-            reader.parseAsText(objText);
-            const mtlText = jsonText.mtl;
-            materialsReader.parseAsText(mtlText);
-            
-    
-            const size = reader.getNumberOfOutputPorts();
-            console.log('size', size);
-            for (let i = 0; i < size; i++) {
-                const polydata = reader.getOutputData(i);
-                const name = polydata.get('name').name;
-                const mapper = vtkMapper.newInstance();
-                const actor = vtkActor.newInstance();
-    
-                actor.setMapper(mapper);
-                mapper.setInputData(polydata);
-    
-                materialsReader.applyMaterialToActor(name, actor);
-                renderer.addActor(actor);
-    
-                scene.push({ name, polydata, mapper, actor });
-            }
+            jsonFiles.map((jsonFile, index)=>{
+              console.log(jsonFile)
+              const jsonText = jsonFile.jsonData
+              const objText = jsonText.obj;
+              reader.parseAsText(objText);
+              const mtlText = jsonText.mtl;
+              materialsReader.parseAsText(mtlText);
+              
+      
+              const size = reader.getNumberOfOutputPorts();
+              console.log('size', size);
+              for (let i = 0; i < size; i++) {
+                  const polydata = reader.getOutputData(i);
+                  const name = polydata.get('name').name;
+                  const mapper = vtkMapper.newInstance();
+                  const actor = vtkActor.newInstance();
+      
+                  actor.setMapper(mapper);
+                  mapper.setInputData(polydata);
+      
+                  materialsReader.applyMaterialToActor(name, actor);
+                  renderer.addActor(actor);
+      
+                  scene.push({ name, polydata, mapper, actor });
+              }
+            })
             resetCamera();
             render();
-    
+
             const htmlBuffer = [
                 '<style>.visible { font-weight: bold; } .click { cursor: pointer; min-width: 150px;}</style>',
             ];
@@ -91,19 +94,25 @@ const JsonFileRenderer = (props) => {
       };
 
       useEffect(() => {
-        const jsonFile = props.jsonFile;
-      
-        if (jsonFile && jsonFile.jsonData) {
-          initialize3DRenderer(jsonFile);
+        const jsonFiles = props.jsonFiles;
+    
+        console.log(jsonFiles)
+        if (jsonFiles) {
+          initialize3DRenderer(jsonFiles);
         } else {
           console.error('Invalid jsonFile or jsonData is undefined.');
         }
-      }, []);
+      }, [props.jsonFiles]);
       
 
 
   return (
-    <div ref={containerRef} />
+    <div>
+      <div style={{
+        height:"100vh",
+        width:"100vw",
+      }} ref={containerRef} />
+    </div>
 
   )
 }
