@@ -1,13 +1,16 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import vtkActor from '@kitware/vtk.js/Rendering/Core/Actor';
 import vtkFullScreenRenderWindow from '@kitware/vtk.js/Rendering/Misc/FullScreenRenderWindow';
 import vtkMapper from '@kitware/vtk.js/Rendering/Core/Mapper';
 import vtkMTLReader from '@kitware/vtk.js/IO/Misc/MTLReader';
 import vtkOBJReader from '@kitware/vtk.js/IO/Misc/OBJReader';
+import "./Uploads.css"
+
 
 const UploadOBJandSTLAndRender3D = () => {
   const containerRef = useRef(null);
   const objInputRef = useRef(null);
+  const [isRendered, setIsRendered]=useState(false)
   const mtlInputRef = useRef(null);
 
   const initialize3DRenderer = async (objFile, mtlFile) => {
@@ -111,6 +114,7 @@ const UploadOBJandSTLAndRender3D = () => {
     const mtlFile = mtlInputRef.current.files[0];
 
     if (objFile && mtlFile) {
+      setIsRendered(true)
       initialize3DRenderer(objFile, mtlFile);
     } else {
       console.error('Please select both OBJ and MTL files.');
@@ -118,22 +122,28 @@ const UploadOBJandSTLAndRender3D = () => {
   };
 
   return (
-    <>
-      <form onSubmit={handleSubmit}>
-        <label>
-          Select .OBJ File:
-          <input type="file" accept=".obj" ref={objInputRef} />
-        </label>
-        <br />
-        <label>
-          Select .MTL File:
-          <input type="file" accept=".mtl" ref={mtlInputRef} />
-        </label>
-        <br />
-        <button type="submit">Submit</button>
-      </form>
+    <div>
+      <div className='outer-container'
+          style={{height : isRendered ? "40vh" : "100vh"}}
+        >
+          <form className='file-form' style={{height:isRendered ? "70%" : "35%"}}  onSubmit={handleSubmit}>
+              <div className='input-container'>
+                <label>
+                  Select .OBJ File:
+                </label>
+                <input type="file" accept=".obj" ref={objInputRef} />
+              </div>
+              <div className='input-container'>
+                <label>
+                  Select .MTL File:
+                </label>
+                  <input type="file" accept=".mtl" ref={mtlInputRef} />
+              </div>
+            <button className='submit-button'  type="submit">Submit</button>
+          </form>
+        </div>
       <div ref={containerRef} />
-    </>
+    </div>
   );
 };
 

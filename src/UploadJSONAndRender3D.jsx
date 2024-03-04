@@ -1,13 +1,17 @@
-import React, { useRef } from 'react';
+import React, { useRef , useState} from 'react';
 import vtkActor from '@kitware/vtk.js/Rendering/Core/Actor';
 import vtkFullScreenRenderWindow from '@kitware/vtk.js/Rendering/Misc/FullScreenRenderWindow';
 import vtkMapper from '@kitware/vtk.js/Rendering/Core/Mapper';
 import vtkMTLReader from '@kitware/vtk.js/IO/Misc/MTLReader';
 import vtkOBJReader from '@kitware/vtk.js/IO/Misc/OBJReader';
+import "./Uploads.css"
+
 
 const UploadJSONAndRender3D = () => {
   const containerRef = useRef(null);
   const JsonInputRef = useRef(null);
+  const [isRendered, setIsRendered]=useState(false)
+
 
   const initialize3DRenderer = async (jsonFile) => {
     console.log('Initializing 3D renderer...');
@@ -113,8 +117,7 @@ const UploadJSONAndRender3D = () => {
     const jsonFile = JsonInputRef.current.files[0];
 
     if (jsonFile) {
-      console.log(typeof(jsonFile))
-      console.log(jsonFile)
+      setIsRendered(true)
       initialize3DRenderer(jsonFile);
     } else {
       console.error('Please select the JSON file.');
@@ -122,18 +125,22 @@ const UploadJSONAndRender3D = () => {
   };
 
   return (
-    <>
-      <form onSubmit={handleSubmit}>
-        <label>
-          Select a .JSON File:
-          <input type="file" accept=".json" ref={JsonInputRef} />
-        </label>
-        <br />
-        <button type="submit">Submit</button>
-      </form>
-
+    <div>
+      <div className='outer-container'
+        style={{height : isRendered ? "30vh" : "100vh"}}
+      >
+          <form className='file-form' style={{height:isRendered ? "70%" : "20%"}} onSubmit={handleSubmit}>
+            <div className='input-container'>
+              <label>
+                Select a .JSON File:
+              </label>
+              <input type="file" accept=".json" ref={JsonInputRef} />
+            </div>
+            <button className='submit-button'  type="submit">Submit</button>
+          </form>
+      </div>
       <div ref={containerRef} />
-    </>
+    </div>
   );
 };
 
