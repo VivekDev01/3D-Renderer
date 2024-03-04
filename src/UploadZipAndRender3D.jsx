@@ -1,10 +1,12 @@
 import React, { useRef, useState } from 'react';
 import JSZip from 'jszip';
 import JsonFileRenderer from './components/JsonFileRenderer';
+import "./Uploads.css"
 
 const UploadZipAndRender3D = () => {
   const zipInputRef = useRef(null);
   const [jsonFiles, setJsonFiles]=useState([])
+  const [isRendered, setIsRendered]=useState(false)
 
   const handleSubmit=async(e)=>{
     e.preventDefault();
@@ -29,6 +31,7 @@ const UploadZipAndRender3D = () => {
           });
           const extractedJsonData = await Promise.all(promises);
           setJsonFiles(extractedJsonData);
+          setIsRendered(true)
         } catch (error) {
           console.error('Error extracting or processing files:', error);
         }
@@ -44,35 +47,30 @@ const UploadZipAndRender3D = () => {
 
 
   return (
-    <div style={{
-        display:"flex",
-        flexDirection:"column",
-        justifyContent:"center",
-        alignItems:"center",
-    }}>
-      <form style={{
-        height:"30vh",
-        width:"50%",
-        display:"flex",
-        flexDirection:"column",
-        justifyContent:"center",
-        alignItems:"center",
-        border:"1px solid black",
-        marginBottom:"10px"
-      }} onSubmit={handleSubmit}>
-        <label>
-          Select a .zip File:
-          <input type="file" accept=".zip" ref={zipInputRef} />
-        </label>
-        <br />
-        <button type="submit">Submit</button>
-      </form>
-
-      
-      <div>
-        {jsonFiles.length>0 && <JsonFileRenderer jsonFiles={jsonFiles} />}
+  <div>
+      <div className='outer-container'
+          style={{height : isRendered ? "30vh" : "100vh"}}
+      >
+        <form className='file-form' style={{height:isRendered ? "70%" : "20%"}} onSubmit={handleSubmit}>
+        <div className='input-container'>
+            <label>
+              Select a .zip File:
+            </label>
+              <input type="file" accept=".zip" ref={zipInputRef} />
+            <br />
+          </div>
+            <button
+                className='submit-button' 
+                type="submit"
+             >
+             Submit
+             </button>
+        </form>
       </div>
-      
+
+        <div>
+          {jsonFiles.length>0 && <JsonFileRenderer jsonFiles={jsonFiles} />}
+        </div>
     </div>
   );
 };
