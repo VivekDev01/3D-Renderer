@@ -13,6 +13,7 @@
     "decompress": "^4.2.1",
     "fflate": "^0.8.2",
     "fs": "^0.0.1-security",
+    "js-tokens": "^9.0.0",
     "jszip": "^3.10.1",
     "path": "^0.12.7",
     "process": "^0.11.10",
