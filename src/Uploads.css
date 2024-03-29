@@ -66,3 +66,27 @@
 
 }
 
+.page{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center ;
+}
+
+
+.tables{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    width: 70%;
+    height: 200vh;
+}
+
+.table-container{
+    border: 1px solid black;
+}
+
+.table-head{
+    background-color: #67a7f1;
+}
