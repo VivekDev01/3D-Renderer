@@ -1,118 +1,108 @@
-import React from 'react'
+import React, { useEffect, useRef } from 'react';
 import vtkActor from '@kitware/vtk.js/Rendering/Core/Actor';
 import vtkFullScreenRenderWindow from '@kitware/vtk.js/Rendering/Misc/FullScreenRenderWindow';
 import vtkMapper from '@kitware/vtk.js/Rendering/Core/Mapper';
-import vtkMTLReader from '@kitware/vtk.js/IO/Misc/MTLReader';
 import vtkOBJReader from '@kitware/vtk.js/IO/Misc/OBJReader';
-import { useEffect, useRef } from 'react';
+
+// Initialize scene and toggleVisibility functions in the global scope
+window.scene = [];
+window.toggleVisibility = (event) => {
+  const index = Number(event.target.dataset.index);
+  const actor = window.scene[index].actor;
+  const visibility = actor.getVisibility();
+
+  actor.setVisibility(!visibility);
+  window.scene[index].visibility = !visibility;
+
+  const buttonText = event.target;
+  buttonText.textContent = visibility ? 'Show' : 'Hide';
+
+  window.fullScreenRenderer.getRenderWindow().render();
+};
 
 const ObjFilesRenderer = (props) => {
   const containerRef = useRef(null);
+  const fullScreenRendererRef = useRef(null);
 
-
+  useEffect(() => {
     const initialize3DRenderer = async (objFiles) => {
-        console.log('Initializing 3D renderer...');
-        const fullScreenRenderer = vtkFullScreenRenderWindow.newInstance({
-          container: containerRef.current,
-          background: [0.5, 0.5, 0.5],
-        });
-        const renderer = fullScreenRenderer.getRenderer();
-        const renderWindow = fullScreenRenderer.getRenderWindow();
-    
-        const resetCamera = renderer.resetCamera;
-        const render = renderWindow.render;
-    
-        const reader = vtkOBJReader.newInstance({ splitMode: 'usemtl' });
-        // const materialsReader = vtkMTLReader.newInstance();
-        const scene = [];
-        console.log('Materials and reader set.');
-    
-        function onClick(event) {
-          const el = event.target;
-          const index = Number(el.dataset.index);
-          const actor = scene[index].actor;
-          const visibility = actor.getVisibility();
-    
-          actor.setVisibility(!visibility);
-          if (visibility) {
-            el.classList.remove('visible');
-          } else {
-            el.classList.add('visible');
+      console.log('Initializing 3D renderer...');
+      const fullScreenRenderer = vtkFullScreenRenderWindow.newInstance({
+        container: containerRef.current,
+        background: [0.5, 0.5, 0.5],
+      });
+      const renderer = fullScreenRenderer.getRenderer();
+      const renderWindow = fullScreenRenderer.getRenderWindow();
+
+      const resetCamera = renderer.resetCamera;
+      const render = renderWindow.render;
+
+      const reader = vtkOBJReader.newInstance({ splitMode: 'usemtl' });
+
+      try {
+        objFiles.forEach((objFile) => {
+          const objText = objFile.objContent;
+          reader.parseAsText(objText);
+  
+          const size = reader.getNumberOfOutputPorts();
+          for (let i = 0; i < size; i++) {
+              const polydata = reader.getOutputData(i);
+              const name = polydata.get('name').name;
+              const mapper = vtkMapper.newInstance();
+              const actor = vtkActor.newInstance();
+  
+              actor.setMapper(mapper);
+              mapper.setInputData(polydata);
+  
+              renderer.addActor(actor);
+  
+              // Store information about the object/component
+              window.scene.push({ name, polydata, mapper, actor, visibility: true });
           }
-          render();
-        }
-    
-        try {
-            objFiles.map((objFile, index)=>{
-              const objText = objFile.objContent
-              reader.parseAsText(objText);
-            //   const mtlText = jsonText.mtl;
-            //   materialsReader.parseAsText(mtlText);
-              
-      
-              const size = reader.getNumberOfOutputPorts();
-              console.log('size', size);
-              for (let i = 0; i < size; i++) {
-                  const polydata = reader.getOutputData(i);
-                  const name = polydata.get('name').name;
-                  const mapper = vtkMapper.newInstance();
-                  const actor = vtkActor.newInstance();
-      
-                  actor.setMapper(mapper);
-                  mapper.setInputData(polydata);
-      
-                //   materialsReader.applyMaterialToActor(name, actor);
-                  renderer.addActor(actor);
-      
-                  scene.push({ name, polydata, mapper, actor });
-              }
-            })
-            resetCamera();
-            render();
+        });
+        resetCamera();
+        render();
 
-            const htmlBuffer = [
-                '<style>.visible { font-weight: bold; } .click { cursor: pointer; min-width: 150px;}</style>',
-            ];
-            scene.forEach((item, idx) => {
-                htmlBuffer.push(
-                `<div class="click visible" data-index="${idx}">${item.name}</div>`
-                );
-            });
-    
-            fullScreenRenderer.addController(htmlBuffer.join('\n'));
-            const nodes = document.querySelectorAll('.click');
-            for (let i = 0; i < nodes.length; i++) {
-                const el = nodes[i];
-                el.onclick = onClick;
-            }
-            console.log('Renderer initialization complete.');
-        } catch (error) {
-          console.error('Error initializing 3D renderer:', error);
-        }
-      };
+        const htmlBuffer = [
+          '<style>.visible { font-weight: bold; cursor: pointer; } .click { min-width: 150px;}</style>',
+        ];
+        window.scene.forEach((item, idx) => {
+          console.log('item', item)
+          htmlBuffer.push(
+            `<div class="click visible" data-index="${idx}">
+              <button onclick="toggleVisibility(event)" data-index="${idx}">${item.visibility ? 'Hide' : 'Show'}</button>
+              ${item.name}
+            </div>`
+          );
+        });
 
-      useEffect(() => {
-        const objFiles = props.objFiles;
-    
-        console.log(objFiles)
-        if (objFiles) {
-          initialize3DRenderer(objFiles);
-        } else {
-          console.error('Invalid jsonFile or jsonData is undefined.');
-        }
-      }, [props.objFiles]);
-      
+        fullScreenRenderer.addController(htmlBuffer.join('\n'));
+        window.fullScreenRenderer = fullScreenRenderer;
+        console.log('Renderer initialization complete.');
+      } catch (error) {
+        console.error('Error initializing 3D renderer:', error);
+      }
+    };
 
+    const objFiles = props.objFiles;
+    if (objFiles) {
+      initialize3DRenderer(objFiles);
+    } else {
+      console.error('Invalid objFiles or objFiles is undefined.');
+    }
+  }, [props.objFiles]);
 
   return (
     <div>
-      <div style={{
-        height:"100vh",
-        width:"100vw",
-      }} ref={containerRef} />
+      <div
+        style={{
+          height: '100vh',
+          width: '100vw',
+        }}
+        ref={containerRef}
+      />
     </div>
+  );
+};
 
-  )
-}
-
-export default ObjFilesRenderer
+export default ObjFilesRenderer;
