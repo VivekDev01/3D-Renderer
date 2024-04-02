@@ -47,7 +47,7 @@ const Home = () => {
         const formData = new FormData();
         formData.append('file', InputRef.current.files[0]);
         console.log(formData.get('file'));
-        const res = await axios.post('http://localhost:5002/upload', formData);
+        const res = await axios.post('http://localhost:5002/upload');
         if (res.data.success) {
           console.log(res.data)
           setObjFiles(res.data.obj_data)

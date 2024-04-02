@@ -3,6 +3,8 @@ import vtkActor from '@kitware/vtk.js/Rendering/Core/Actor';
 import vtkFullScreenRenderWindow from '@kitware/vtk.js/Rendering/Misc/FullScreenRenderWindow';
 import vtkMapper from '@kitware/vtk.js/Rendering/Core/Mapper';
 import vtkOBJReader from '@kitware/vtk.js/IO/Misc/OBJReader';
+import "./Renderer.css"
+
 
 // Initialize scene and toggleVisibility functions in the global scope
 window.scene = [];
@@ -29,7 +31,7 @@ const ObjFilesRenderer = (props) => {
       console.log('Initializing 3D renderer...');
       const fullScreenRenderer = vtkFullScreenRenderWindow.newInstance({
         container: containerRef.current,
-        background: [0.5, 0.5, 0.5],
+        background: [0.1, 0.1, 0.1],
       });
       const renderer = fullScreenRenderer.getRenderer();
       const renderWindow = fullScreenRenderer.getRenderWindow();
@@ -47,7 +49,7 @@ const ObjFilesRenderer = (props) => {
           const size = reader.getNumberOfOutputPorts();
           for (let i = 0; i < size; i++) {
               const polydata = reader.getOutputData(i);
-              const name = polydata.get('name').name;
+              const name = objFile.filename
               const mapper = vtkMapper.newInstance();
               const actor = vtkActor.newInstance();
   
@@ -93,11 +95,11 @@ const ObjFilesRenderer = (props) => {
   }, [props.objFiles]);
 
   return (
-    <div>
+    <div className='container'>
       <div
         style={{
-          height: '100vh',
-          width: '100vw',
+          height: '60vh',
+          width: '60vw',
         }}
         ref={containerRef}
       />

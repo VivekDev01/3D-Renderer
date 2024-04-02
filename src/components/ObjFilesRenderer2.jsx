@@ -3,6 +3,7 @@ import vtkActor from '@kitware/vtk.js/Rendering/Core/Actor';
 import vtkFullScreenRenderWindow from '@kitware/vtk.js/Rendering/Misc/FullScreenRenderWindow';
 import vtkMapper from '@kitware/vtk.js/Rendering/Core/Mapper';
 import vtkOBJReader from '@kitware/vtk.js/IO/Misc/OBJReader';
+import "./Renderer.css"
 
 // Initialize scene and toggleVisibility functions in the global scope
 window.scene = [];
@@ -102,7 +103,7 @@ const ObjFilesRenderer = (props) => {
     <div>
       <div
         style={{
-          height: '100vh',
+          height: '70vh',
           width: '100vw',
         }}
         ref={containerRef}

@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react';
 import JSZip from 'jszip';
 import JsonFileRenderer from './components/JsonFileRenderer';
 import "./Uploads.css"
-import ObjFilesRenderer2 from './components/ObjFilesRenderer2';
+import ObjFilesRenderer from './components/ObjFilesRenderer';
 
 const UploadZipOfObjAndRender3D = () => {
   const zipInputRef = useRef(null);
@@ -48,7 +48,7 @@ const UploadZipOfObjAndRender3D = () => {
 
 
   return (
-  <div>
+  <div className='parent-container'>
       <div className='outer-container'
           style={{height : isRendered ? "30vh" : "100vh"}}
       >
@@ -70,7 +70,7 @@ const UploadZipOfObjAndRender3D = () => {
       </div>
 
         <div>
-          {objFiles.length>0 && <ObjFilesRenderer2 objFiles={objFiles} />}
+          {objFiles.length>0 && <ObjFilesRenderer objFiles={objFiles} />}
         </div>
     </div>
   );
