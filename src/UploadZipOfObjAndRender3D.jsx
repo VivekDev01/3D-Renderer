@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react';
 import JSZip from 'jszip';
 import JsonFileRenderer from './components/JsonFileRenderer';
 import "./Uploads.css"
-import ObjFilesRenderer from './components/ObjFilesRenderer';
+import ObjFilesRenderer2 from './components/ObjFilesRenderer2';
 
 const UploadZipOfObjAndRender3D = () => {
   const zipInputRef = useRef(null);
@@ -25,8 +25,9 @@ const UploadZipOfObjAndRender3D = () => {
   
           const promises = Object.keys(zip.files).map(async (filename) => {
             if (filename.endsWith('.obj')) {
+              // console.log(filename)
               const objContent = await zip.files[filename].async('string');
-              return { objContent };
+              return { filename, objContent };
             }
           });
           const extractedObjData = await Promise.all(promises);
@@ -69,7 +70,7 @@ const UploadZipOfObjAndRender3D = () => {
       </div>
 
         <div>
-          {objFiles.length>0 && <ObjFilesRenderer objFiles={objFiles} />}
+          {objFiles.length>0 && <ObjFilesRenderer2 objFiles={objFiles} />}
         </div>
     </div>
   );
