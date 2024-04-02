@@ -99,7 +99,7 @@ const ObjFilesRenderer = (props) => {
       <div
         style={{
           height: '60vh',
-          width: '60vw',
+          width: '70vw',  
         }}
         ref={containerRef}
       />
