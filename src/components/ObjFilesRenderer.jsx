@@ -4,7 +4,7 @@ import vtkFullScreenRenderWindow from '@kitware/vtk.js/Rendering/Misc/FullScreen
 import vtkMapper from '@kitware/vtk.js/Rendering/Core/Mapper';
 import vtkOBJReader from '@kitware/vtk.js/IO/Misc/OBJReader';
 import "./Renderer.css"
-
+import TableModal from './TableModal';
 
 // Initialize scene and toggleVisibility functions in the global scope
 window.scene = [];
@@ -95,11 +95,14 @@ const ObjFilesRenderer = (props) => {
   }, [props.objFiles]);
 
   return (
-    <div className='container'>
+    <div className='container' style={{ position: 'relative' }}>
+      <div style={{ position: 'absolute', top: '15px', right: '25px', zIndex: 1 }}>
+        <TableModal jsonFiles={props.jsonFiles} />
+      </div>
       <div
         style={{
-          height: '60vh',
-          width: '70vw',  
+          height: '100vh',
+          width: '100vw',  
         }}
         ref={containerRef}
       />

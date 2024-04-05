@@ -3,36 +3,37 @@ import JSZip from 'jszip';
 import JsonFileRenderer from './components/JsonFileRenderer';
 import "./Uploads.css"
 import ObjFilesRenderer from './components/ObjFilesRenderer';
+import TableModal from './components/TableModal';
 
 const UploadZipOfObjAndRender3D = () => {
   const zipInputRef = useRef(null);
-  const [objFiles, setObjFiles]=useState([])
-  const [isRendered, setIsRendered]=useState(false)
+  const [objFiles, setObjFiles] = useState([]);
+  const [isRendered, setIsRendered] = useState(false);
+  const [TableModalOpen, setTableModalOpen] = useState(false);
 
-  const handleSubmit=async(e)=>{
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-  
     const file = zipInputRef.current.files[0];
-  
-    if (file){
+
+    if (file) {
       const reader = new FileReader();
-  
-      reader.onload = async function (event){
+
+      reader.onload = async function (event) {
         const zipData = event.target.result;
-  
-        try{
+
+        try {
           const zip = await JSZip.loadAsync(zipData);
-  
+
           const promises = Object.keys(zip.files).map(async (filename) => {
             if (filename.endsWith('.obj')) {
-              // console.log(filename)
               const objContent = await zip.files[filename].async('string');
               return { filename, objContent };
             }
           });
           const extractedObjData = await Promise.all(promises);
           setObjFiles(extractedObjData);
-          setIsRendered(true)
+          setIsRendered(true);
         } catch (error) {
           console.error('Error extracting or processing files:', error);
         }
@@ -44,34 +45,34 @@ const UploadZipOfObjAndRender3D = () => {
     }
   };
 
-
-
-
   return (
-  <div className='parent-container'>
-      <div className='outer-container'
-          style={{height : isRendered ? "30vh" : "100vh"}}
-      >
-        <form className='file-form' style={{height:isRendered ? "70%" : "20%"}} onSubmit={handleSubmit}>
-        <div className='input-container'>
-            <label>
-              Select a .zip File having Objs:
-            </label>
-              <input type="file" accept=".zip" ref={zipInputRef} />
-            <br />
-          </div>
-            <button
-                className='submit-button' 
-                type="submit"
-             >
-             Submit
-             </button>
-        </form>
-      </div>
+    <div className='parent-container'>
+        { !isRendered && (
 
-        <div>
-          {objFiles.length>0 && <ObjFilesRenderer objFiles={objFiles} />}
-        </div>
+      <div className='outer-container' style={{ height: isRendered ? "30vh" : "100vh" }}>
+          <form className='file-form' style={{ height: isRendered ? "70%" : "20%" }} onSubmit={handleSubmit}>
+            <div className='input-container'>
+              <label>
+                Select a .zip File having Objs:
+              </label>
+              <input type="file" accept=".zip" ref={zipInputRef} />
+              <br />
+            </div>
+            <button
+              className='submit-button'
+              type="submit"
+            >
+              Submit
+            </button>
+          </form>
+      </div>
+      )}
+
+
+      <div>
+        <TableModal />
+        {isRendered && <ObjFilesRenderer objFiles={objFiles} />}
+      </div>
     </div>
   );
 };
