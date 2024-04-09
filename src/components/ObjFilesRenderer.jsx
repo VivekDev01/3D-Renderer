@@ -6,7 +6,6 @@ import vtkOBJReader from '@kitware/vtk.js/IO/Misc/OBJReader';
 import "./Renderer.css"
 import TableModal from './TableModal';
 
-// Initialize scene and toggleVisibility functions in the global scope
 window.scene = [];
 window.toggleVisibility = (event) => {
   const index = Number(event.target.dataset.index);
@@ -58,7 +57,6 @@ const ObjFilesRenderer = (props) => {
   
               renderer.addActor(actor);
   
-              // Store information about the object/component
               window.scene.push({ name, polydata, mapper, actor, visibility: true });
           }
         });
