@@ -7,6 +7,20 @@
     min-height: 100vh;
 }
 
+.page{
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center ;
+    background-image: url('./bg.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+
 .outer-container{
     width: 100%;
     display: flex;
@@ -70,18 +84,6 @@
 
 }
 
-.page{
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center ;
-    background-image: url('./bg.jpg');
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
-    font-family: Arial, Helvetica, sans-serif;
-}
 
 
 .tables{

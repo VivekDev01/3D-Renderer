@@ -11,6 +11,11 @@ const Home = () => {
   const [isLoading, setIsLoading] = useState(false); 
   const [objFiles, setObjFiles] = useState([]);
   const [jsonFiles, setJsonFiles]= useState([]);
+  const [isFormSubmitted, setIsFormSubmitted]=useState(false);
+  const [isService1Completed, setIsService1Completed]= useState(false);
+  const [isService2Completed, setIsService2Completed]= useState(false);
+  const [isService3Completed, setIsService3Completed]= useState(false);
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -34,21 +39,20 @@ const Home = () => {
       console.error('Error while submitting the form:', error);
     } finally {
       setIsLoading(false);
+      setIsFormSubmitted(true);
     }
   };
 
   return (
     <div className='page'>
-      {isLoading && <CircularProgress
+      {/* {isLoading && <CircularProgress
         color="primary"
         determinate={false}
         size="lg"
         variant="solid"
-      />} 
-      {!isRendered && !isLoading && (
-        <div className='outer-container'
-          style={{height : isRendered ? "30vh" : "100vh"}}
-        >
+      />}  */}
+      {!isFormSubmitted && (
+        <div className='outer-container'>
           <form className='file-form' style={{height:isRendered ? "70%" : "20%"}} onSubmit={handleSubmit}>
             <div className='input-container'>
               <label>
