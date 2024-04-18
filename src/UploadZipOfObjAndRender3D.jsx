@@ -1,9 +1,7 @@
 import React, { useRef, useState } from 'react';
 import JSZip from 'jszip';
-import JsonFileRenderer from './components/JsonFileRenderer';
 import "./Uploads.css"
 import ObjFilesRenderer2 from './components/ObjFilesRenderer2';
-import TableModal from './components/TableModal';
 
 const UploadZipOfObjAndRender3D = () => {
   const zipInputRef = useRef(null);

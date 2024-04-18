@@ -6,6 +6,7 @@ import vtkOBJReader from '@kitware/vtk.js/IO/Misc/OBJReader';
 import "./Renderer.css"
 import TableModal from './TableModal';
 import Button from '@mui/material/Button';
+// import { ColorPicker } from "material-ui-color";
 
 
 window.scene = [];
@@ -63,9 +64,9 @@ const ObjFilesRenderer = (props) => {
 
               newRenderer.addActor(newActor);
 
-              setActor(newActor); // Set the actor state
-              setRenderer(newRenderer); // Set the renderer state
-              setRendererInitialized(true); // Flag renderer as initialized
+              setActor(newActor); 
+              setRenderer(newRenderer); 
+              setRendererInitialized(true); 
               window.scene.push({ name, polydata, mapper, newActor, visibility: true });
           }
         });
@@ -74,13 +75,13 @@ const ObjFilesRenderer = (props) => {
         renderWindow.render();
 
         const htmlBuffer = [
-          '<style>.visible { font-weight: bold; cursor: pointer; } .click { min-width: 150px;}</style>',
+          '<style>.visible { font-weight: bold; cursor: pointer; padding:5px; } .click { min-width: 150px;} .btn{border-radius:3px; border:0.1px solid black; cursor:pointer; background-color:white; color:black; font-weight:bold}</style>',
         ];
         window.scene.forEach((item, idx) => {
           console.log('item', item)
           htmlBuffer.push(
             `<div class="click visible" data-index="${idx}">
-              <button onclick="toggleVisibility(event)" data-index="${idx}">${item.visibility ? 'Hide' : 'Show'}</button>
+              <Button class="btn" onclick="toggleVisibility(event)" data-index="${idx}">${item.visibility ? 'Hide' : 'Show'}</Button>
               ${item.name}
             </div>`
           );
@@ -105,7 +106,7 @@ const ObjFilesRenderer = (props) => {
         renderer.delete();
       }
     };
-  }, [props.objFiles, rendererInitialized]); // Only re-run if objFiles or rendererInitialized changes
+  }, [props.objFiles, rendererInitialized]); 
 
   const handleStartRotation = () => {
     setIsRotating(true);
@@ -119,27 +120,27 @@ const ObjFilesRenderer = (props) => {
     const rotateActor = () => {
       if (isRotating && renderer && actor) {
         const camera = renderer.getActiveCamera();
-        camera.azimuth(2); // Rotate camera by 1 degree
+        camera.azimuth(0.5); 
         renderer.resetCameraClippingRange();
-        renderer.getRenderWindow().render(); // Render the scene
+        renderer.getRenderWindow().render(); 
       }
     };
 
-    const rotationInterval = setInterval(rotateActor, 360); // Adjust rotation speed
+    const rotationInterval = setInterval(rotateActor, 30); 
 
-    return () => clearInterval(rotationInterval); // Cleanup on unmount or state change
-  }, [isRotating, renderer, actor]); // Re-run effect if rotation state, renderer, or actor changes
+    return () => clearInterval(rotationInterval); 
+  }, [isRotating, renderer, actor]); 
 
   return (
     <div className='container' style={{ position: 'relative' }}>
       <div style={{ position: 'absolute', top: '15px', right: '25px', zIndex: 1 }}>
         <TableModal jsonFiles={props.jsonFiles} />
       </div>
-      <div style={{ position: 'absolute', top: '15px', right: '50%', zIndex: 1 }}>
+      <div style={{ position: 'absolute', top: '15px', right: '45%', zIndex: 1 }}>
         {isRotating ? (
-          <Button onClick={handleStopRotation}>Stop Rotation</Button>
+          <Button style={{backgroundColor:"blue", color:"white", fontWeight:"bold"}} onClick={handleStopRotation}>Stop Rotation</Button>
         ) : (
-          <Button onClick={handleStartRotation}>Start Rotation</Button>
+          <Button style={{backgroundColor:"blue", color:"white", fontWeight:"bold"}} onClick={handleStartRotation}>Start Rotation</Button>
         )}
       </div>
       <div
