@@ -8,6 +8,7 @@ import UploadJSONAndRender3D from './UploadJSONAndRender3D';
 import UploadZipAndRender3D from './UploadZipAndRender3D';
 import UploadZipOfObjAndRender3D from './UploadZipOfObjAndRender3D';
 import Liver from "./Liver"
+import UploadZipOfObjAndSTLAndRender3D from './UploadZipOfObj_STLAndRender3D';
 
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
       <Route path='/upload-json' element={<UploadJSONAndRender3D />} />
       <Route path='/upload-zip' element={<UploadZipAndRender3D />} />
       <Route path='/upload-zip-objs' element={<UploadZipOfObjAndRender3D />} />
+      <Route path='/upload-zip-objs-stl' element={<UploadZipOfObjAndSTLAndRender3D />} />
       <Route path='/' element={<Liver />} />
 
     </Routes>
