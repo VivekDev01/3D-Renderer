@@ -5,11 +5,10 @@ import vtkMapper from '@kitware/vtk.js/Rendering/Core/Mapper';
 import vtkOBJReader from '@kitware/vtk.js/IO/Misc/OBJReader';
 import vtkMTLReader from '@kitware/vtk.js/IO/Misc/MTLReader';
 import Button from '@mui/material/Button';
-import TableModal from './TableModal';
 import "./Renderer.css"
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import VisibilityTransparentIcon from '@mui/icons-material/VisibilityOutlined'; // Use this icon for transparency state
+import VisibilityTransparentIcon from '@mui/icons-material/VisibilityOutlined'; 
 
 const ObjAndMtlFilesRenderer = (props) => {
   const containerRef = useRef(null);

@@ -1,12 +1,11 @@
 import React, { useRef, useState } from 'react';
 import JSZip from 'jszip';
 import "./Uploads.css"
-// import ObjFilesRenderer2 from './components/ObjFilesRenderer2';
 import ObjAndMtlFilesRenderer from './components/ObjAndMtlFilesRenderer';
 
 const UploadZipOfObjAndSTLAndRender3D = () => {
   const zipInputRef = useRef(null);
-  const [objFiles, setObjFiles] = useState([]);
+  const [renderingElements, setRenderingElements] = useState([]);
   const [isRendered, setIsRendered] = useState(false);
 
   const handleSubmit = async (e) => {
@@ -44,14 +43,14 @@ const UploadZipOfObjAndSTLAndRender3D = () => {
           const extractedObjData = await Promise.all(objPromises);
 
           // Associate mtl content with corresponding obj files
-          const finalObjData = extractedObjData.map(({ filename, objContent }) => {
+          const finalRenderingElements = extractedObjData.map(({ filename, objContent }) => {
             const baseFilename = filename.replace('.obj', '');
             const mtlContent = mtlContents[baseFilename] || '';
             return { filename, objContent, mtlContent };
           });
 
-          setObjFiles(finalObjData);
-          console.log(finalObjData);
+          setRenderingElements(finalRenderingElements);
+          console.log(finalRenderingElements);
           setIsRendered(true);
         } catch (error) {
           console.error('Error extracting or processing files:', error);
@@ -71,7 +70,7 @@ const UploadZipOfObjAndSTLAndRender3D = () => {
           <form className='file-form' style={{ height: isRendered ? "70%" : "20%" }} onSubmit={handleSubmit}>
             <div className='input-container'>
               <label>
-                Select a .zip File having Objs:
+                Select a .zip File having Objs & MTLs:
               </label>
               <input type="file" accept=".zip" ref={zipInputRef} />
               <br />
@@ -84,7 +83,7 @@ const UploadZipOfObjAndSTLAndRender3D = () => {
       )}
 
       <div>
-        {isRendered && <ObjAndMtlFilesRenderer renderingElements={objFiles} />}
+        {isRendered && <ObjAndMtlFilesRenderer renderingElements={renderingElements} />}
       </div>
     </div>
   );
