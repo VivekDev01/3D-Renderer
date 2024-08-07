@@ -19,6 +19,7 @@ const ObjAndMtlFilesRenderer = (props) => {
 
   useEffect(() => {
     const initialize3DRenderer = async (renderingElements) => {
+      
       console.log('Initializing 3D renderer...');
       const fullScreenRenderer = vtkFullScreenRenderWindow.newInstance({
         container: containerRef.current,
