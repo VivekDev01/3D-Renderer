@@ -72,7 +72,7 @@ const ObjFilesRenderer = (props) => {
             plane = vtkPlane.newInstance({ normal: [1, 0, 0], origin: [0, 0, 0] });
         }
         else if(selectedPlane === 'sagittal'){
-            plane = vtkPlane.newInstance({ normal: [0, 0, 1], origin: [0, 0, 0] });
+            plane = vtkPlane.newInstance({ normal: [0, 0, -1], origin: [0, 0, 0] });
         }
         
 
@@ -183,7 +183,7 @@ const ObjFilesRenderer = (props) => {
         }else if(selectedPlane === 'coronal'){
             plane.setOrigin(bounds[0], 0, 0);
         }else if(selectedPlane === 'sagittal'){
-            plane.setOrigin(0, 0, bounds[4]);
+            plane.setOrigin(0, 0, bounds[5]);
         }
 
         renderWindow.addView(openGLRenderWindow);
@@ -298,30 +298,11 @@ const ObjFilesRenderer = (props) => {
     } else if (selectedPlane === 'coronal') {
       plane = vtkPlane.newInstance({ normal: [1, 0, 0], origin: [0, 0, 0] });
     } else if (selectedPlane === 'sagittal') {
-      plane = vtkPlane.newInstance({ normal: [0, 0, 1], origin: [0, 0, 0] });
+      plane = vtkPlane.newInstance({ normal: [0, 0, -1], origin: [0, 0, 0] });
     }
 
     updateClippingPlanes(plane);
   }, [selectedPlane]);
-
-  // const handleScroll = (event) => {
-  //   const value = event.target.value;
-  //   const normalizedValue = value / 100; // Normalize the value between 0 and 1
-
-  //   if (renderer && actors.length > 0) {
-  //     // Assuming all actors are within the same bounding box
-  //     const bounds = renderer.computeVisiblePropBounds();
-  //     const zRange = bounds[5] - bounds[4]; // z-axis range of the bounding box
-  //     const zValue = bounds[4] + normalizedValue * zRange;
-
-  //     actors.forEach(({ actor }) => {
-  //       // Update clipping planes to show the cross-section at zValue
-  //       actor.getMapper().getClippingPlanes()[0].setOrigin(0, 0, zValue);
-  //     });
-
-  //     renderer.getRenderWindow().render();
-  //   }
-  // };
 
   const handleScroll = () => {
     const value = scrollValue;
@@ -351,9 +332,9 @@ const ObjFilesRenderer = (props) => {
             });
         }
         else if(selectedPlane === 'sagittal'){
-            const zRange = bounds[5] - bounds[4]; // z-axis range of the bounding box
+            const zRange = bounds[4] - bounds[5]; // z-axis range of the bounding box
             // Calculate the zValue such that higher values correspond to the anterior side
-            const zValue = bounds[4] + normalizedValue * zRange;
+            const zValue = bounds[5] + normalizedValue * zRange;
 
             actors.forEach(({ actor }) => {
                 // Update the clipping plane to crop from anterior to posterior
