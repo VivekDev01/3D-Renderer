@@ -37,6 +37,20 @@ const ObjFilesRenderer = (props) => {
   const [selectedPlane, setSelectedPlane] = useState('axial');
   const [scrollValue, setScrollValue] = useState(0);
 
+    // Function to update clipping planes for all actors
+    const updateClippingPlanes = (plane) => {
+      if (renderer && actors.length > 0) {
+        actors.forEach(({ actor }) => {
+          const mapper = actor.getMapper();
+          if (mapper) {
+            mapper.removeAllClippingPlanes();
+            mapper.addClippingPlane(plane);
+          }
+        });
+        renderer.getRenderWindow().render();
+      }
+    };
+
     const initialize3DRenderer = async (renderingElements) => {
       console.log('Initializing 3D renderer...');
       try {
@@ -49,7 +63,7 @@ const ObjFilesRenderer = (props) => {
         const renderWindow = fullScreenRenderer.getRenderWindow();
 
         const newActors = [];
-        // const plane = vtkPlane.newInstance({ normal: [0, 0, 1], origin: [0, 0, 0] });
+
         let plane = null;
         if(selectedPlane === 'axial'){
             plane = vtkPlane.newInstance({ normal: [0, -1, 0], origin: [0, 0, 0] });
@@ -275,6 +289,20 @@ const ObjFilesRenderer = (props) => {
 
     return () => clearInterval(rotationInterval);
   }, [isRotating, renderer]);
+
+  useEffect(() => {
+    let plane = null;
+
+    if (selectedPlane === 'axial') {
+      plane = vtkPlane.newInstance({ normal: [0, -1, 0], origin: [0, 0, 0] });
+    } else if (selectedPlane === 'coronal') {
+      plane = vtkPlane.newInstance({ normal: [1, 0, 0], origin: [0, 0, 0] });
+    } else if (selectedPlane === 'sagittal') {
+      plane = vtkPlane.newInstance({ normal: [0, 0, 1], origin: [0, 0, 0] });
+    }
+
+    updateClippingPlanes(plane);
+  }, [selectedPlane]);
 
   // const handleScroll = (event) => {
   //   const value = event.target.value;
