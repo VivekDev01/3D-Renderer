@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import JSZip from 'jszip';
 import "./Uploads.css"
-import ObjAndMtlFilesRenderer from './components/ObjAndMtlFilesRenderer';
+import ObjAndMtlFilesRenderer from './components/ObjAndMtlFilesRenderer2';
 
 const UploadZipOfObjAndSTLAndRender3D = () => {
   const zipInputRef = useRef(null);
