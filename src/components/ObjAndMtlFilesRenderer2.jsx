@@ -34,10 +34,9 @@ const ObjFilesRenderer = (props) => {
   const [isRotating, setIsRotating] = useState(false);
   const [isControlsVisible, setIsControlsVisible] = useState(true);
   const pageContainerRef = React.useRef(null);
-  const [selectedPlane, setSelectedPlane] = useState('coronal');
+  const [selectedPlane, setSelectedPlane] = useState('axial');
   const [scrollValue, setScrollValue] = useState(0);
 
-  useEffect(() => {
     const initialize3DRenderer = async (renderingElements) => {
       console.log('Initializing 3D renderer...');
       try {
@@ -186,17 +185,19 @@ const ObjFilesRenderer = (props) => {
       }
     };
 
+  useEffect(() => {
+
     const renderingElements = props.renderingElements;
     if (renderingElements && !rendererInitialized) {
       console.log('Rendering elements:', renderingElements);
       initialize3DRenderer(renderingElements);
     }
 
-    return () => {
+    // return () => {
       // if (renderer) {
       //   renderer.delete();
       // }
-    };
+    // };
   }, [props.renderingElements, rendererInitialized, selectedPlane, renderer]);
 
   const toggleVisibility = (index) => {
@@ -339,7 +340,7 @@ const ObjFilesRenderer = (props) => {
 
 useEffect(() => {
   handleScroll();
-}, [scrollValue, selectedPlane, renderer]);
+}, [scrollValue, selectedPlane, renderer, actors]);
 
 
 
