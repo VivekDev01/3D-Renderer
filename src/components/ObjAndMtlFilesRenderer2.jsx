@@ -5,7 +5,7 @@ import vtkMapper from '@kitware/vtk.js/Rendering/Core/Mapper';
 import vtkOBJReader from '@kitware/vtk.js/IO/Misc/OBJReader';
 import vtkMTLReader from '@kitware/vtk.js/IO/Misc/MTLReader';
 import vtkPlane from '@kitware/vtk.js/Common/DataModel/Plane';
-import {Button, IconButton} from '@mui/material';
+import {Button, FormControl, IconButton, InputLabel, MenuItem, Select} from '@mui/material';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import VisibilityTransparentIcon from '@mui/icons-material/VisibilityOutlined';
@@ -34,7 +34,7 @@ const ObjFilesRenderer = (props) => {
   const [isRotating, setIsRotating] = useState(false);
   const [isControlsVisible, setIsControlsVisible] = useState(true);
   const pageContainerRef = React.useRef(null);
-
+  const [selectedPlane, setSelectedPlane] = useState('axial');
 
   useEffect(() => {
     const initialize3DRenderer = async (renderingElements) => {
@@ -367,9 +367,35 @@ const handleFullscreen = () => {
       </div>
 
 
-      {/* vertical slider */}
       {rendererInitialized && isControlsVisible && (
-        <div style={{ position: 'absolute', top: '50%', left: '5px', height: '30%', zIndex: 1 }}>
+        <div 
+            style={{ 
+                position: 'absolute', 
+                display:"flex", 
+                justifyContent:"space-around", 
+                alignItems:'center', 
+                flexDirection:"column",  
+                top: '35%', 
+                width:"7%" ,
+                left: '5px', 
+                height: '40%', 
+                zIndex: 1 
+            }}
+        >
+            <FormControl variant="outlined" style={{width:'100%', backgroundColor:'gray', color:'white'}}>
+                <InputLabel style={{color:"white"}} id="demo-simple-select-label">Cross section</InputLabel>
+                <Select
+                    style={{color:'white', backgroundColor:"gray",  width: "100%", height: "35px"}}
+                    id="demo-simple-select"
+                    value={selectedPlane}
+                    label="Search by:"
+                    onChange={(e) => setSelectedPlane(e.target.value)}
+                >
+                    <MenuItem value='axial'>Axial</MenuItem>
+                    <MenuItem value='coronal'>Coronal</MenuItem>
+                    <MenuItem value='sagittal'>Sagittal</MenuItem>
+                </Select>  
+            </FormControl>
           <input
             type="range"
             min="0"
@@ -379,10 +405,6 @@ const handleFullscreen = () => {
             onChange={handleScroll}
             style={{
               transform: 'rotate(-90deg)',
-              position: 'absolute',
-              width: '200px',
-              top: '40%',
-              left: '-75px',
               zIndex: 2,
             }}
           />
