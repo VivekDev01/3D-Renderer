@@ -438,7 +438,7 @@ const handleFullscreen = () => {
             <FormControl variant="outlined" style={{width:'100%', backgroundColor:'gray', color:'white'}}>
                 <InputLabel style={{color:"white"}} id="demo-simple-select-label">Cross section</InputLabel>
                 <Select
-                    style={{color:'white', backgroundColor:"gray",  width: "100%", height: "35px"}}
+                    style={{color:'white', backgroundColor:"#EB3678",  width: "100%", height: "35px"}}
                     id="demo-simple-select"
                     value={selectedPlane}
                     label="Search by:"
