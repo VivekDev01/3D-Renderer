@@ -34,7 +34,7 @@ const ObjFilesRenderer = (props) => {
   const [isRotating, setIsRotating] = useState(false);
   const [isControlsVisible, setIsControlsVisible] = useState(true);
   const pageContainerRef = React.useRef(null);
-  const [selectedPlane, setSelectedPlane] = useState('axial');
+  const [selectedPlane, setSelectedPlane] = useState('coronal');
 
   useEffect(() => {
     const initialize3DRenderer = async (renderingElements) => {
@@ -50,7 +50,16 @@ const ObjFilesRenderer = (props) => {
 
         const newActors = [];
         // const plane = vtkPlane.newInstance({ normal: [0, 0, 1], origin: [0, 0, 0] });
-        const plane = vtkPlane.newInstance({ normal: [0, -1, 0], origin: [0, 0, 0] });
+        let plane;
+        if(selectedPlane === 'axial'){
+            plane = vtkPlane.newInstance({ normal: [0, -1, 0], origin: [0, 0, 0] });
+        }
+        else if(selectedPlane === 'sagittal'){
+            plane = vtkPlane.newInstance({ normal: [1, 0, 0], origin: [0, 0, 0] });
+        }
+        else if(selectedPlane === 'coronal'){
+            plane = vtkPlane.newInstance({ normal: [0, 0, 1], origin: [0, 0, 0] });
+        }
         
 
         for (const el of renderingElements) {
@@ -155,8 +164,13 @@ const ObjFilesRenderer = (props) => {
         orientationMarker.setMaxPixelSize(300);
 
         const bounds = newRenderer.computeVisiblePropBounds();
-        // plane.setOrigin(0, 0, bounds[4]); 
-        plane.setOrigin(0, bounds[3], 0); 
+        if(selectedPlane === 'axial'){
+            plane.setOrigin(0, bounds[3], 0); 
+        }else if(selectedPlane === 'sagittal'){
+            plane.setOrigin(bounds[0], 0, 0);
+        }else if(selectedPlane === 'coronal'){
+            plane.setOrigin(0, 0, bounds[4]);
+        }
 
         renderWindow.addView(openGLRenderWindow);
         newRenderer.resetCamera();
@@ -285,18 +299,41 @@ const ObjFilesRenderer = (props) => {
 
     if (renderer && actors.length > 0) {
         const bounds = renderer.computeVisiblePropBounds();
-        const yRange = bounds[3] - bounds[2]; // y-axis range of the bounding box
-        
-        // Calculate the yValue such that higher values correspond to the superior side
-        const yValue = bounds[3] - normalizedValue * yRange;
 
-        actors.forEach(({ actor }) => {
-            // Update the clipping plane to crop from superior to inferior
-            actor.getMapper().getClippingPlanes()[0].setOrigin(0, yValue, 0);
-        });
+        if(selectedPlane === 'axial'){
+            const yRange = bounds[3] - bounds[2]; // y-axis range of the bounding box
+            // Calculate the yValue such that higher values correspond to the superior side
+            const yValue = bounds[3] - normalizedValue * yRange;
+
+            actors.forEach(({ actor }) => {
+                // Update the clipping plane to crop from superior to inferior
+                actor.getMapper().getClippingPlanes()[0].setOrigin(0, yValue, 0);
+            });
+        }
+        else if(selectedPlane === 'sagittal'){
+            const xRange = bounds[1] - bounds[0]; // x-axis range of the bounding box
+            // Calculate the xValue such that higher values correspond to the right side
+            const xValue = bounds[0] + normalizedValue * xRange;
+
+            actors.forEach(({ actor }) => {
+                // Update the clipping plane to crop from right to left
+                actor.getMapper().getClippingPlanes()[0].setOrigin(xValue, 0, 0);
+            });
+        }
+        else if(selectedPlane === 'coronal'){
+            const zRange = bounds[5] - bounds[4]; // z-axis range of the bounding box
+            // Calculate the zValue such that higher values correspond to the anterior side
+            const zValue = bounds[4] + normalizedValue * zRange;
+
+            actors.forEach(({ actor }) => {
+                // Update the clipping plane to crop from anterior to posterior
+                actor.getMapper().getClippingPlanes()[0].setOrigin(0, 0, zValue);
+            });
+        }
 
         renderer.getRenderWindow().render();
     }
+
 };
 
 
