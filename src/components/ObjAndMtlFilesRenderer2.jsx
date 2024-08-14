@@ -35,6 +35,7 @@ const ObjFilesRenderer = (props) => {
   const [isControlsVisible, setIsControlsVisible] = useState(true);
   const pageContainerRef = React.useRef(null);
   const [selectedPlane, setSelectedPlane] = useState('coronal');
+  const [scrollValue, setScrollValue] = useState(0);
 
   useEffect(() => {
     const initialize3DRenderer = async (renderingElements) => {
@@ -50,7 +51,7 @@ const ObjFilesRenderer = (props) => {
 
         const newActors = [];
         // const plane = vtkPlane.newInstance({ normal: [0, 0, 1], origin: [0, 0, 0] });
-        let plane;
+        let plane = null;
         if(selectedPlane === 'axial'){
             plane = vtkPlane.newInstance({ normal: [0, -1, 0], origin: [0, 0, 0] });
         }
@@ -192,11 +193,11 @@ const ObjFilesRenderer = (props) => {
     }
 
     return () => {
-      if (renderer) {
-        renderer.delete();
-      }
+      // if (renderer) {
+      //   renderer.delete();
+      // }
     };
-  }, [props.renderingElements, rendererInitialized]);
+  }, [props.renderingElements, rendererInitialized, selectedPlane, renderer]);
 
   const toggleVisibility = (index) => {
     setActors((prevActors) => {
@@ -293,8 +294,8 @@ const ObjFilesRenderer = (props) => {
   //   }
   // };
 
-  const handleScroll = (event) => {
-    const value = event.target.value;
+  const handleScroll = () => {
+    const value = scrollValue;
     const normalizedValue = value / 100; // Normalize the value between 0 and 1
 
     if (renderer && actors.length > 0) {
@@ -335,6 +336,11 @@ const ObjFilesRenderer = (props) => {
     }
 
 };
+
+useEffect(() => {
+  handleScroll();
+}, [scrollValue, selectedPlane, renderer]);
+
 
 
 const enterFullscreen = () => {
@@ -426,25 +432,32 @@ const handleFullscreen = () => {
                     id="demo-simple-select"
                     value={selectedPlane}
                     label="Search by:"
-                    onChange={(e) => setSelectedPlane(e.target.value)}
+                    onChange={(e) => {
+                      setSelectedPlane(e.target.value);
+                      setScrollValue(0);
+                    }}
                 >
                     <MenuItem value='axial'>Axial</MenuItem>
                     <MenuItem value='coronal'>Coronal</MenuItem>
                     <MenuItem value='sagittal'>Sagittal</MenuItem>
                 </Select>  
             </FormControl>
-          <input
-            type="range"
-            min="0"
-            max="100"
-            defaultValue="0"
-            className="vertical-slider"
-            onChange={handleScroll}
-            style={{
-              transform: 'rotate(-90deg)',
-              zIndex: 2,
-            }}
-          />
+            <input
+              type="range"
+              min="0"
+              max="100"
+              // defaultValue="0"
+              value={scrollValue}
+              className="vertical-slider"
+              onChange={(event) => {
+                setScrollValue(event.target.value);
+                // handleScroll();
+              }}
+              style={{
+                transform: 'rotate(-90deg)',
+                zIndex: 2,
+              }}
+            />
         </div>
       )}
 
