@@ -309,6 +309,7 @@ const ObjFilesRenderer = (props) => {
     const normalizedValue = value / 100; // Normalize the value between 0 and 1
 
     if (renderer && actors.length > 0) {
+      console.log('scrolling', actors, renderer)
         const bounds = renderer.computeVisiblePropBounds();
 
         if(selectedPlane === 'axial'){
