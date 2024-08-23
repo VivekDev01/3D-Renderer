@@ -47,7 +47,6 @@ const ObjFilesRenderer = (props) => {
   const [rotationValueCoronal, setRotationValueCoronal] = useState(0);
   const [rotationValueSagittal, setRotationValueSagittal] = useState(0);
 
-  const [selectedAxis, setSelectedAxis] = useState('x');
   const [selectedPlaneForShifting, setSelectedPlaneForShifting] = useState('axial');
   const [initialActorStates, setInitialActorStates] = useState([]);
 
@@ -132,7 +131,7 @@ const ObjFilesRenderer = (props) => {
             const diffuseColor = material ? material.Kd.map(parseFloat) : [1, 1, 1];
             const initialColor = `#${rgbToHex(diffuseColor[0] * 255)}${rgbToHex(diffuseColor[1] * 255)}${rgbToHex(diffuseColor[2] * 255)}`;
 
-            const visibilityMode = name === 'mtl1' ? 'transparent' : 'visible';
+            const visibilityMode = name === 'mtl1.001' ? 'transparent' : 'visible';
             if (visibilityMode === 'transparent') {
               newActor.getProperty().setOpacity(0.5);
             }
@@ -477,27 +476,27 @@ const updateActorPosition = (newValue, plane) => {
   };
 
 
-  const updateActorRotation = (newValue, plane) => {
+  const updateActorRotation = (newValue, axis) => {
     if (selectedActor !== null) {
       const actorObj = actors[selectedActor];
       const vtkActor = actorObj.actor;
 
       // Rotate the actor around the selected axis
-      if (selectedAxis === 'x') {
+      if (axis === 'x') {
         vtkActor.rotateX(newValue - rotationValueAxial);
-      } else if (selectedAxis === 'y') {
+      } else if (axis === 'y') {
         vtkActor.rotateY(newValue - rotationValueCoronal);
-      } else if (selectedAxis === 'z') {
+      } else if (axis === 'z') {
         vtkActor.rotateZ(newValue - rotationValueSagittal);
       }
 
-        if(plane === 'axial'){
+        if(axis === 'x'){
             setRotationValueAxial(newValue);
         }
-        else if(plane === 'coronal'){
+        else if(axis === 'y'){
             setRotationValueCoronal(newValue);
         }
-        else if(plane === 'sagittal'){
+        else if(axis === 'z'){
             setRotationValueSagittal(newValue);
         }
       renderer.getRenderWindow().render();
@@ -624,7 +623,7 @@ const updateActorPosition = (newValue, plane) => {
                         value={rotationValueAxial}
                         min={-180}
                         max={180}
-                        onChange={(event) => updateActorRotation(parseInt(event.target.value), 'axial')}
+                        onChange={(event) => updateActorRotation(parseInt(event.target.value), 'x')}
                         aria-labelledby="rotation-slider"
                         className="horizontal-slider"
                     />
@@ -637,7 +636,7 @@ const updateActorPosition = (newValue, plane) => {
                         value={rotationValueCoronal}
                         min={-180}
                         max={180}
-                        onChange={(event) => updateActorRotation(parseInt(event.target.value), 'coronal')}
+                        onChange={(event) => updateActorRotation(parseInt(event.target.value), 'y')}
                         aria-labelledby="rotation-slider"
                         className="horizontal-slider"
                     />
@@ -650,7 +649,7 @@ const updateActorPosition = (newValue, plane) => {
                         value={rotationValueSagittal}
                         min={-180}
                         max={180}
-                        onChange={(event) => updateActorRotation(parseInt(event.target.value), 'sagittal')}
+                        onChange={(event) => updateActorRotation(parseInt(event.target.value), 'z')}
                         aria-labelledby="rotation-slider"
                         className="horizontal-slider"
                     />
