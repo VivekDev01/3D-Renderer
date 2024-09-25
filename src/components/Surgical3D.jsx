@@ -160,11 +160,12 @@ const ObjFilesRenderer = (props) => {
           fontFamily: "Arial",
           fontColor: "#FFF",
           fontSizeScale: (res) => res / 2,
-          faceColor: "#606060",
+          faceColor: "#EB3678",
           faceRotation: 0,
           edgeThickness: 0.1,
           edgeColor: "black",
           resolution: 400,
+          sendToBack: true,
         });
         cube.setXPlusFaceProperty({ text: "L" }); // Left
         cube.setXMinusFaceProperty({ text: "R" }); // Right
