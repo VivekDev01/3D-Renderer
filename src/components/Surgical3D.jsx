@@ -51,7 +51,6 @@ const ObjFilesRenderer = (props) => {
   const [initialActorStates, setInitialActorStates] = useState([]);
 
 
-
     // Function to update clipping planes for all actors
     const updateClippingPlanes = (plane) => {
       if (renderer && actors.length > 0) {
@@ -134,22 +133,6 @@ const ObjFilesRenderer = (props) => {
             const visibilityMode = name === 'mtl1.001' ? 'transparent' : 'visible';
             if (visibilityMode === 'transparent') {
               newActor.getProperty().setOpacity(0.5);
-            }
-
-            if(name === 'mtl1'){
-              name = 'Mammary Gland'
-            }
-            else if(name === 'mtl192317'){
-              name = 'Duct'
-            }
-            else if(name === 'mtl300061'){
-              name = 'Sternum'
-            }
-            else if(name === 'mtl305077'){
-              name = 'Tumor'
-            }
-            else if(name === 'mtl308555'){
-              name = 'Vessels'
             }
 
             if(selectedActor===null){
@@ -415,6 +398,8 @@ const handdleRestore = () => {
     setScrollValue(0);
     setSelectedPlane('axial');
 
+    
+
 
     // updateActorPosition(0, 'axial');
     // updateActorPosition(0, 'coronal');
@@ -432,6 +417,11 @@ const handdleRestore = () => {
         });
   
         if (renderer) {
+          const camera = renderer.getActiveCamera();
+          camera.setPosition(0, 0, 1);
+          camera.setFocalPoint(0, 0, 0);
+          camera.setViewUp(0, 1, 0);
+          renderer.resetCamera();
           renderer.getRenderWindow().render();
         }
   
