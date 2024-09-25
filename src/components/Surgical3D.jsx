@@ -37,7 +37,7 @@ const ObjFilesRenderer = (props) => {
   const pageContainerRef = React.useRef(null);
   const [selectedPlane, setSelectedPlane] = useState('axial');
   const [scrollValue, setScrollValue] = useState(0);
-  const [selectedActor, setSelectedActor] = useState(null);
+  const [selectedActor, setSelectedActor] = useState(0);
 
   const [positionValueAxial, setPositionValueAxial] = useState(0);
   const [positionValueCoronal, setPositionValueCoronal] = useState(0);
@@ -144,9 +144,13 @@ const ObjFilesRenderer = (props) => {
             initialStates.push({
                 position: newActor.getPosition(),
                 orientation: newActor.getOrientation(),
+                scale: newActor.getScale(),
             });
           }
         }
+
+        console.log(initialStates)
+
 
         const openGLRenderWindow = vtkOpenGLRenderWindow.newInstance();
         const cube = vtkAnnotatedCubeActor.newInstance();
@@ -398,32 +402,18 @@ const handdleRestore = () => {
     setScrollValue(0);
     setSelectedPlane('axial');
 
-    
 
-
-    // updateActorPosition(0, 'axial');
-    // updateActorPosition(0, 'coronal');
-    // updateActorPosition(0, 'sagittal');
-    // updateActorRotation(0, 'x')
-    // updateActorRotation(0, 'y')
-    // updateActorRotation(0, 'z')
     setActors((prevActors) => {
         const updatedActors = [...prevActors];
         updatedActors.forEach((actorObj, index) => {
           const vtkActor = actorObj.actor;
-          console.log(vtkActor);
-          vtkActor.setPosition(...initialActorStates[index].position);
-          vtkActor.setOrientation(...initialActorStates[index].orientation);
+          vtkActor.setPosition(0, 0, 0);
+          vtkActor.setOrientation(270, 90, 0);
+          vtkActor.setScale(1, 1, 1);
+          vtkActor.rotateX(0);
+          vtkActor.rotateY(0);
+          vtkActor.rotateZ(0);
         });
-  
-        if (renderer) {
-          const camera = renderer.getActiveCamera();
-          camera.setPosition(0, 0, 1);
-          camera.setFocalPoint(0, 0, 0);
-          camera.setViewUp(0, 1, 0);
-          renderer.resetCamera();
-          renderer.getRenderWindow().render();
-        }
   
         return updatedActors;
     });
@@ -435,6 +425,15 @@ const handdleRestore = () => {
       setRotationValueCoronal(0);
       setRotationValueSagittal(0);
       setSelectedActor(0)
+
+      if (renderer) {
+        const camera = renderer.getActiveCamera();
+        camera.setPosition(0, 0, 1);
+        camera.setFocalPoint(0, 0, 0);
+        camera.setViewUp(0, 1, 0);
+        renderer.resetCamera();
+        renderer.getRenderWindow().render();
+      }
 }
 
 
@@ -466,6 +465,7 @@ const updateActorPosition = (newValue, plane) => {
       renderer.getRenderWindow().render();
     }
   };
+
 
 
   const updateActorRotation = (newValue, axis) => {
@@ -548,7 +548,15 @@ const updateActorPosition = (newValue, plane) => {
                 <InputLabel style={{color:"white"}} id="demo-simple-select-label">Organ</InputLabel>
                 <Select 
                     value={selectedActor} 
-                    onChange={(e) => setSelectedActor(e.target.value)}
+                    onChange={(e) => {
+                      setSelectedActor(e.target.value);
+                      setPositionValueAxial(0);
+                      setPositionValueCoronal(0);
+                      setPositionValueSagittal(0);
+                      setRotationValueAxial(0);
+                      setRotationValueCoronal(0);
+                      setRotationValueSagittal(0);
+                    }}
                     style={{color:'white', backgroundColor:"#EB3678",  width: "100%", height: "100%"}}
                 >
                 {actors.map((actorObj, index) => (
