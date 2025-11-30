@@ -14,6 +14,7 @@ import FilterListOutlinedIcon from '@mui/icons-material/FilterListOutlined';
 import FilterListOffOutlinedIcon from '@mui/icons-material/FilterListOffOutlined';
 import AutorenewOutlinedIcon from '@mui/icons-material/AutorenewOutlined';
 import SyncDisabledOutlinedIcon from '@mui/icons-material/SyncDisabledOutlined';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import vtkOrientationMarkerWidget from "@kitware/vtk.js/Interaction/Widgets/OrientationMarkerWidget";
 import vtkAnnotatedCubeActor from "@kitware/vtk.js/Rendering/Core/AnnotatedCubeActor";
 import vtkOpenGLRenderWindow from "@kitware/vtk.js/Rendering/OpenGL/RenderWindow";
@@ -86,6 +87,29 @@ const ObjFilesRenderer = (props) => {
   const [isChangePropertyValueFeatureEnabled, setIsChangePropertyValueFeatureEnabled] = useState(false);
   const [isChangePositionValueFeatureEnabled, setIsChangePositionValueFeatureEnabled] = useState(false);
   const [isChangeRotationValueFeatureEnabled, setIsChangeRotationValueFeatureEnabled] = useState(false);
+  const [isFindingsVisible, setIsFindingsVisible] = useState(false);
+
+  const demoFindings = {
+    Liver: [
+      "Volume: 1450 cc",
+      "Density: Normal (45 HU)",
+      "No focal lesions detected in the left lobe.",
+      "Mild fatty infiltration observed."
+    ],
+    Tumor: [
+      "Location: Segment VII",
+      "Size: 3.2 x 2.8 x 3.0 cm",
+      "Type: Hepatocellular Carcinoma (HCC)",
+      "Vascularity: Hypervascular",
+      "Margins: Irregular"
+    ],
+    Arteries: [
+      "Hepatic Artery: Patent",
+      "Portal Vein: Normal caliber",
+      "No evidence of thrombosis.",
+      "Variant anatomy: Michels Type I"
+    ]
+  };
 
 
   const id = useParams().id;
@@ -655,6 +679,7 @@ const ObjFilesRenderer = (props) => {
               setIsChangePropertyValueFeatureEnabled(!isChangePropertyValueFeatureEnabled);
               setIsCrossSectionFeatureEnabled(false);
               setIsChangePositionValueFeatureEnabled(false);
+              setIsFindingsVisible(false);
             }}
             title="Change Property Value"
           >
@@ -671,6 +696,7 @@ const ObjFilesRenderer = (props) => {
               setIsCrossSectionFeatureEnabled(!isCrossSectionFeatureEnabled);
               setIsChangePropertyValueFeatureEnabled(false);
               setIsChangePositionValueFeatureEnabled(false);
+              setIsFindingsVisible(false);
             }}
             title="Cross Section"
           >
@@ -686,6 +712,7 @@ const ObjFilesRenderer = (props) => {
               setIsChangePositionValueFeatureEnabled(!isChangePositionValueFeatureEnabled);
               setIsCrossSectionFeatureEnabled(false);
               setIsChangePropertyValueFeatureEnabled(false);
+              setIsFindingsVisible(false);
             }}
             title="Change Position Value"
           >
@@ -739,75 +766,67 @@ const ObjFilesRenderer = (props) => {
             <Fullscreen sx={{ color: "#fff" }} />
           </IconButton>
         </Tooltip>
+
+        {/* Findings Info */}
+        <Tooltip title="Show Findings">
+          <IconButton
+            id="findings_btn"
+            onClick={() => {
+              setIsFindingsVisible(!isFindingsVisible);
+              setIsChangePropertyValueFeatureEnabled(false);
+              setIsCrossSectionFeatureEnabled(false);
+              setIsChangePositionValueFeatureEnabled(false);
+            }}
+            title="Show Findings"
+          >
+            <InfoOutlinedIcon sx={{ color: isFindingsVisible ? '#EB3678' : "#fff" }} />
+          </IconButton>
+        </Tooltip>
       </div>
 
 
 
       {/* Organ Selection */}
       {rendererInitialized && isChangePositionValueFeatureEnabled && (
-        <div
-          style={{
-            color: 'white',
-            position: 'absolute',
-            width: '7%',
-            top: '34%',
-            right: '0px',
-            zIndex: 1,
-            display: 'flex',
-            justifyContent: 'space-around',
-            height: "25%"
+        <div 
+          style={{ 
+              color:'white', 
+              position: 'absolute', 
+              width:'7%', 
+              top: '34%', 
+              right: '0px', 
+              zIndex: 1, 
+              display:'flex', 
+              justifyContent:'space-around',
+              height:"25%"
           }}>
           {actors.length > 0 && (
-            <FormControl variant="outlined" style={{ width: '100%', height: "20%", backgroundColor: 'gray', color: 'white' }}>
-              <InputLabel style={{ color: "white" }} id="demo-simple-select-label">Organ</InputLabel>
-              <Select
-                value={selectedActor}
-                onChange={(e) => {
-                  setSelectedActor(e.target.value);
-                  setPositionValueAxial(0);
-                  setPositionValueCoronal(0);
-                  setPositionValueSagittal(0);
-                  setRotationValueAxial(0);
-                  setRotationValueCoronal(0);
-                  setRotationValueSagittal(0);
-                }}
-                style={{ color: 'white', backgroundColor: "#EB3678", width: "100%", height: "100%" }}
-              >
-                {actors.map((actorObj, index) => {
-                  const { icon, label } = getOrganDetails(actorObj.name);
-                  return (
-                    <MenuItem key={index} value={index}>
-                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
-                        {icon ? (
-                          <Tooltip title={label}>
-                            <div
-                              style={{
-                                width: '80px',
-                                height: '80px',
-                                backgroundColor: actorObj.color,
-                                maskImage: `url(${icon})`,
-                                maskSize: 'contain',
-                                maskRepeat: 'no-repeat',
-                                maskPosition: 'center',
-                                WebkitMaskImage: `url(${icon})`,
-                                WebkitMaskSize: 'contain',
-                                WebkitMaskRepeat: 'no-repeat',
-                                WebkitMaskPosition: 'center',
-                              }}
-                            />
-                          </Tooltip>
-                        ) : (
-                          <span>{label}</span>
-                        )}
-                      </div>
-                    </MenuItem>
-                  );
-                })}
-              </Select>
-            </FormControl>
+              <FormControl variant="outlined" style={{width:'100%', height:"20%", backgroundColor:'gray', color:'white'}}>
+                  <InputLabel style={{color:"white"}} id="demo-simple-select-label">Organ</InputLabel>
+                  <Select 
+                      value={selectedActor} 
+                      onChange={(e) => {
+                        setSelectedActor(e.target.value);
+                        setPositionValueAxial(0);
+                        setPositionValueCoronal(0);
+                        setPositionValueSagittal(0);
+                        setRotationValueAxial(0);
+                        setRotationValueCoronal(0);
+                        setRotationValueSagittal(0);
+                      }}
+                      style={{color:'white', backgroundColor:"#EB3678",  width: "100%", height: "100%"}}
+                  >
+                  {actors.map((actorObj, index) => (
+                      <MenuItem key={index} value={index}>
+                      {actorObj.name}
+                      </MenuItem>
+                  ))}
+                  </Select>
+              </FormControl>
           )}
         </div>
       )}
+
 
       {/* shifting sliders */}
       {rendererInitialized && isChangePositionValueFeatureEnabled &&
@@ -1110,6 +1129,80 @@ const ObjFilesRenderer = (props) => {
                 );
               })()}
 
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Findings Panel */}
+      {rendererInitialized && isFindingsVisible && (
+        <div
+          style={{
+            position: 'absolute',
+            top: '20%',
+            right: '20px',
+            width: '300px',
+            backgroundColor: 'rgba(20, 20, 20, 0.75)',
+            backdropFilter: 'blur(10px)',
+            borderRadius: '15px',
+            padding: '20px',
+            color: 'white',
+            boxShadow: '0 8px 32px 0 rgba(0, 0, 0, 0.37)',
+            border: '1px solid rgba(255, 255, 255, 0.18)',
+            zIndex: 10,
+            maxHeight: '60%',
+            overflowY: 'auto',
+            fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif'
+          }}
+        >
+          <h2 style={{
+            marginTop: 0,
+            marginBottom: '20px',
+            fontSize: '1.5rem',
+            borderBottom: '1px solid rgba(255,255,255,0.2)',
+            paddingBottom: '10px',
+            color: '#EB3678'
+          }}>
+            Radiological Findings
+          </h2>
+
+          {Object.entries(demoFindings).map(([organ, findings]) => (
+            <div key={organ} style={{ marginBottom: '20px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
+                {(() => {
+                  const { icon } = getOrganDetails(
+                    organ === 'Liver' ? 'mtl1' :
+                      organ === 'Tumor' ? 'mtl110503' :
+                        'mtl111289'
+                  );
+                  return icon ? (
+                    <div
+                      style={{
+                        width: '24px',
+                        height: '24px',
+                        backgroundColor: organ === 'Liver' ? '#CD5C5C' : organ === 'Tumor' ? '#8B4513' : '#FF4444',
+                        maskImage: `url(${icon})`,
+                        maskSize: 'contain',
+                        maskRepeat: 'no-repeat',
+                        maskPosition: 'center',
+                        WebkitMaskImage: `url(${icon})`,
+                        WebkitMaskSize: 'contain',
+                        WebkitMaskRepeat: 'no-repeat',
+                        WebkitMaskPosition: 'center',
+                        marginRight: '10px'
+                      }}
+                    />
+                  ) : null;
+                })()}
+                <h3 style={{ margin: 0, fontSize: '1.2rem' }}>{organ}</h3>
+              </div>
+              <ul style={{ paddingLeft: '20px', margin: 0 }}>
+                {findings.map((finding, idx) => (
+                  <li key={idx} style={{ marginBottom: '5px', fontSize: '0.9rem', lineHeight: '1.4' }}>
+                    {finding}
+                  </li>
+                ))}
+              </ul>
             </div>
           ))}
         </div>
