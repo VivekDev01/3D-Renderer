@@ -623,7 +623,11 @@ const ObjFilesRenderer = (props) => {
         vtkActor.getProperty().setSpecularColor(selectedPropertyValue.specularColor, selectedPropertyValue.specularColor, selectedPropertyValue.specularColor);
         vtkActor.getProperty().setRoughnessTexture(selectedPropertyValue.roughnessTexture / 100);
         vtkActor.getProperty().setMetallicTexture(selectedPropertyValue.metallicTexture / 100);
-        vtkActor.getProperty().setOpacity(selectedPropertyValue.opacity / 100);
+        if (actorObj.visibilityMode === 'transparent') {
+          vtkActor.getProperty().setOpacity(0.5);
+        } else {
+          vtkActor.getProperty().setOpacity(selectedPropertyValue.opacity / 100);
+        }
         // vtkActor.getProperty().setFrontfaceCulling(true); // hides the front face of the object
         // vtkActor.getProperty().setBackfaceCulling(true); // hides the back face of the object
       });
