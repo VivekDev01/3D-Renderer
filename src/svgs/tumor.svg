@@ -1,0 +1,37 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="tumorGradient" cx="0.5" cy="0.5" r="0.5" fx="0.5" fy="0.5">
+      <stop offset="0%" stop-color="#A0522D" />
+      <stop offset="70%" stop-color="#5D4037" />
+      <stop offset="100%" stop-color="#3E2723" />
+    </radialGradient>
+    <filter id="tumorRoughness">
+      <feTurbulence type="fractalNoise" baseFrequency="0.08" numOctaves="4" result="noise"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="10" />
+      <feGaussianBlur stdDeviation="0.5" />
+    </filter>
+  </defs>
+
+  <!-- Spiculated Tumor Mass -->
+  <path d="M 256 150
+           Q 300 130, 340 160
+           Q 380 180, 370 230
+           Q 400 270, 360 320
+           Q 330 360, 280 350
+           Q 220 380, 180 330
+           Q 130 300, 150 240
+           Q 140 180, 200 160
+           Q 220 140, 256 150 Z"
+        fill="url(#tumorGradient)" 
+        filter="url(#tumorRoughness)" 
+        stroke="#2D1B15" 
+        stroke-width="1"/>
+
+  <!-- Internal Texture/Necrotic Core -->
+  <circle cx="280" cy="240" r="20" fill="#2D1B15" filter="url(#tumorRoughness)" opacity="0.4"/>
+  <circle cx="230" cy="270" r="15" fill="#2D1B15" filter="url(#tumorRoughness)" opacity="0.3"/>
+  
+  <!-- Spicules (invading edges) -->
+  <path d="M 340 160 L 360 140 M 370 230 L 400 220 M 360 320 L 380 350 M 180 330 L 150 360 M 150 240 L 120 230" 
+        stroke="#3E2723" stroke-width="2" stroke-linecap="round" filter="url(#tumorRoughness)"/>
+</svg>

@@ -5,7 +5,7 @@ import vtkMapper from '@kitware/vtk.js/Rendering/Core/Mapper';
 import vtkOBJReader from '@kitware/vtk.js/IO/Misc/OBJReader';
 import vtkMTLReader from '@kitware/vtk.js/IO/Misc/MTLReader';
 import vtkPlane from '@kitware/vtk.js/Common/DataModel/Plane';
-import {Button, FormControl, IconButton, InputLabel, MenuItem, Select, Slider} from '@mui/material';
+import {Button, FormControl, Icon, IconButton, InputLabel, MenuItem, Select, Slider, Tooltip} from '@mui/material';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import VisibilityTransparentIcon from '@mui/icons-material/VisibilityOutlined';
@@ -24,8 +24,14 @@ import {
   Swipe,
 } from "@mui/icons-material";
 import RestoreIcon from '@mui/icons-material/Restore';
-
-
+import axios from 'axios';
+import {message} from 'antd'
+import { useParams } from 'react-router-dom';
+import {baseURL} from '../config';
+import MagicChange from '@mui/icons-material/AutoFixHigh';
+import CrossSection from '@mui/icons-material/Adjust';
+import RotationIcon from '@mui/icons-material/ThreeSixty';
+import PositionIcon from '@mui/icons-material/PictureInPicture';
 
 const ObjFilesRenderer = (props) => {
   const containerRef = useRef(null);
@@ -49,16 +55,44 @@ const ObjFilesRenderer = (props) => {
 
 
   //vivek
-  const [selectedProperty, setSelectedProperty] = useState('ambient');
+  const [selectedProperty, setSelectedProperty] = useState('diffuse');
   const [selectedPropertyValue, setSelectedPropertyValue] = useState({
-    ambient: 0.1,
-    diffuse: 1,
-    specular: 0.005,
+    ambient: 10,
+    diffuse: 100,
+    specular: 5,
     specularPower: 90,
     specularColor: 50,
     roughnessTexture: 0,
-    metallicTexture: 0.61,
+    metallicTexture: 61,
+    opacity:100,
+
   });
+  const [propertiesChanged, setPropertiesChanged] = useState(false);
+
+  const [isRenderingLoaded, setIsRenderingLoaded] = useState(false);
+
+  const [isCrossSectionFeatureEnabled, setIsCrossSectionFeatureEnabled] = useState(false);
+  const [isChangePropertyValueFeatureEnabled, setIsChangePropertyValueFeatureEnabled] = useState(false);
+  const [isChangePositionValueFeatureEnabled, setIsChangePositionValueFeatureEnabled] = useState(false);
+  const [isChangeRotationValueFeatureEnabled, setIsChangeRotationValueFeatureEnabled] = useState(false);
+
+
+  const id = useParams().id;
+  useEffect(() => {
+      const getProperties = async () => {
+        try {
+          const res = await axios.get(`${baseURL}/get-3d-properties/${id}`);
+          console.log(res.data);
+          if(res.data.success){
+            setSelectedPropertyValue(res.data.properties.properties);
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      }
+
+      getProperties();
+  }, []);
 
 
     // Function to update clipping planes for all actors
@@ -123,18 +157,35 @@ const ObjFilesRenderer = (props) => {
             materialsReader.applyMaterialToActor(name, newActor);
             newRenderer.addActor(newActor);
 
-            newActor.setOrientation(270, 0, 0); // Breast, human skelton
-            // newActor.setOrientation(270, 90, 0);  // KUB
+            // newActor.setOrientation(270, 0, 0); // Breast, human skelton
+            newActor.setOrientation(270, 90, 0);  // KUB
 
 
             newActor.getProperty().setInterpolationToPhong();
-            newActor.getProperty().setAmbient(0.1);  // vivek
-            newActor.getProperty().setDiffuse(1);
-            newActor.getProperty().setSpecular(0.005);
-            newActor.getProperty().setSpecularPower(90);
-            newActor.getProperty().setSpecularColor(50, 50, 50);
-            newActor.getProperty().setRoughnessTexture(0);
-            newActor.getProperty().setMetallicTexture(0.61);
+            // newActor.getProperty().setInterpolationToGouraud();
+            // newActor.getProperty().setInterpolationToFlat();
+
+            // newActor.getProperty().setAmbient(0.6);  // vivek
+            // newActor.getProperty().setDiffuse(1);
+            // newActor.getProperty().setSpecular(0.005);
+            // newActor.getProperty().setSpecularPower(90);
+            // newActor.getProperty().setSpecularColor(50, 50, 50);
+            // newActor.getProperty().setRoughnessTexture(0);
+            // newActor.getProperty().setMetallicTexture(0.61);
+            newActor.getProperty().setAmbient(selectedPropertyValue.ambient/100);  
+            newActor.getProperty().setDiffuse(selectedPropertyValue.diffuse/100);
+            newActor.getProperty().setSpecular(selectedPropertyValue.specular/1000);
+            newActor.getProperty().setSpecularPower(selectedPropertyValue.specularPower);
+            newActor.getProperty().setSpecularColor(selectedPropertyValue.specularColor, selectedPropertyValue.specularColor, selectedPropertyValue.specularColor);
+            newActor.getProperty().setRoughnessTexture(selectedPropertyValue.roughnessTexture/100);
+            newActor.getProperty().setMetallicTexture(selectedPropertyValue.metallicTexture/100);
+            newActor.getProperty().setOpacity(selectedPropertyValue.opacity/100);
+
+            // newActor.getProperty().setEdgeColor(0, 0, 0);
+            // newActor.getProperty().setEdgeVisibility(true);
+
+
+
 
             const material = materialsReader.getMaterial(name);
             const diffuseColor = material ? material.Kd.map(parseFloat) : [1, 1, 1];
@@ -231,6 +282,7 @@ const ObjFilesRenderer = (props) => {
       console.log('Rendering elements:', renderingElements);
       initialize3DRenderer(renderingElements);
     }
+    setIsRenderingLoaded(true);
 
     // return () => {
       // if (renderer) {
@@ -238,6 +290,7 @@ const ObjFilesRenderer = (props) => {
       // }
     // };
   }, [props.renderingElements, rendererInitialized, selectedPlane, renderer]);
+
 
   const toggleVisibility = (index) => {
     setActors((prevActors) => {
@@ -334,7 +387,6 @@ const ObjFilesRenderer = (props) => {
     const normalizedValue = value / 100; // Normalize the value between 0 and 1
 
     if (renderer && actors.length > 0) {
-      console.log('scrolling', actors, renderer)
         const bounds = renderer.computeVisiblePropBounds();
 
         if(selectedPlane === 'axial'){
@@ -506,47 +558,184 @@ const updateActorPosition = (newValue, plane) => {
 
 
 
+  // useEffect(() => {
+  //   console.log(selectedPropertyValue, selectedProperty);
+  //   setActors((prevActors) => {
+  //     const updatedActors = [...prevActors];
+  //     updatedActors.forEach((actorObj, index) => {
+  //       const vtkActor = actorObj.actor;
+  //       if(selectedProperty === 'ambient'){
+  //         vtkActor.getProperty().setAmbient(selectedPropertyValue.ambient/100);
+  //       }
+  //       else if(selectedProperty === 'diffuse'){
+  //         vtkActor.getProperty().setDiffuse(selectedPropertyValue.diffuse/100);
+  //       }
+  //       else if(selectedProperty === 'specular'){
+  //         vtkActor.getProperty().setSpecular(selectedPropertyValue.specular/1000);
+  //       }
+  //       else if(selectedProperty === 'specularPower'){
+  //         vtkActor.getProperty().setSpecularPower(selectedPropertyValue.specularPower);
+  //       }
+  //       else if(selectedProperty === 'specularColor'){
+  //         vtkActor.getProperty().setSpecularColor(selectedPropertyValue.specularColor, selectedPropertyValue.specularColor, selectedPropertyValue.specularColor);
+  //       }
+  //       else if(selectedProperty === 'roughnessTexture'){
+  //         vtkActor.getProperty().setRoughnessTexture(selectedPropertyValue.roughnessTexture/100);
+  //       }
+  //       else if(selectedProperty === 'metallicTexture'){
+  //         vtkActor.getProperty().setMetallicTexture(selectedPropertyValue.metallicTexture/100);
+  //       }
+  //       else if(selectedProperty === 'opacity'){
+  //         vtkActor.getProperty().setOpacity(selectedPropertyValue.opacity/100);
+  //       }
+  //     });
+  //     return updatedActors;
+  //   });
+
+  //   if (renderer) {
+  //     renderer.resetCamera();
+  //     renderer.getRenderWindow().render();
+  //   }
+  // }, [selectedPropertyValue, isRenderingLoaded]);
+
+
+  useEffect(() => {
+    console.log(selectedPropertyValue, selectedProperty);
+    setActors((prevActors) => {
+      const updatedActors = [...prevActors];
+      updatedActors.forEach((actorObj, index) => {
+        const vtkActor = actorObj.actor;
+        vtkActor.getProperty().setAmbient(selectedPropertyValue.ambient/100);
+        vtkActor.getProperty().setDiffuse(selectedPropertyValue.diffuse/100);
+        vtkActor.getProperty().setSpecular(selectedPropertyValue.specular/1000);
+        vtkActor.getProperty().setSpecularPower(selectedPropertyValue.specularPower);
+        vtkActor.getProperty().setSpecularColor(selectedPropertyValue.specularColor, selectedPropertyValue.specularColor, selectedPropertyValue.specularColor);
+        vtkActor.getProperty().setRoughnessTexture(selectedPropertyValue.roughnessTexture/100);
+        vtkActor.getProperty().setMetallicTexture(selectedPropertyValue.metallicTexture/100);
+        vtkActor.getProperty().setOpacity(selectedPropertyValue.opacity/100);
+        // vtkActor.getProperty().setFrontfaceCulling(true); // hides the front face of the object
+        // vtkActor.getProperty().setBackfaceCulling(true); // hides the back face of the object
+      });
+      return updatedActors;
+    });
+
+    if (renderer) {
+      renderer.resetCamera();
+      renderer.getRenderWindow().render();
+    }
+  }, [isRenderingLoaded, selectedPropertyValue]);
+
 
 
 
   return (
     <div className="container" style={{ position: 'relative' }} ref={pageContainerRef}>
 
-      {/* rotation */}
-      <div style={{ position: 'absolute', top: '15px', right: '50px', zIndex: 1 }}>
-        {isRotating ? (
-          <SyncDisabledOutlinedIcon style={{color:"white", fontWeight:"bold", cursor:'pointer'}} onClick={handleStopRotation} />
-        ) : (
-          <AutorenewOutlinedIcon style={{color:"white", fontWeight:"bold", cursor:'pointer'}} onClick={handleStartRotation} />
-        )}
+      <div style={{position: 'absolute', top: '15px', right: '5px', zIndex: 1 }}>
+          {/* Change Property Value */} 
+          <Tooltip title="Change Property Value">
+            <IconButton
+              id="change_property_value_btn"
+              onClick={() => {
+                setIsChangePropertyValueFeatureEnabled(!isChangePropertyValueFeatureEnabled);
+                setIsCrossSectionFeatureEnabled(false);
+                setIsChangePositionValueFeatureEnabled(false);
+              }}
+              title="Change Property Value"
+            >
+            <MagicChange sx={{ color:isChangePropertyValueFeatureEnabled ? '#EB3678' : "#fff" }} />
+          </IconButton>
+        </Tooltip>
+
+
+        {/* Cross Section */}
+        <Tooltip title="Cross Section">
+          <IconButton
+            id="cross_section_btn"
+            onClick={() => {
+              setIsCrossSectionFeatureEnabled(!isCrossSectionFeatureEnabled);
+              setIsChangePropertyValueFeatureEnabled(false);
+              setIsChangePositionValueFeatureEnabled(false);
+            }}
+            title="Cross Section"
+          >
+            <CrossSection sx={{ color:isCrossSectionFeatureEnabled ? '#EB3678' : "#fff" }} />
+          </IconButton>
+        </Tooltip>
+
+        {/* Change Position Value */}
+        <Tooltip title="Change Position Value">
+          <IconButton
+            id="change_position_value_btn"
+            onClick={() => {
+              setIsChangePositionValueFeatureEnabled(!isChangePositionValueFeatureEnabled);
+              setIsCrossSectionFeatureEnabled(false);
+              setIsChangePropertyValueFeatureEnabled(false);
+            }}
+            title="Change Position Value"
+          >
+            <PositionIcon sx={{ color:isChangePositionValueFeatureEnabled ? '#EB3678' : "#fff" }} />
+          </IconButton>
+        </Tooltip>
+
+
+        {/* Restore */}
+        <Tooltip title="Restore">
+          <IconButton
+            id="restore_btn"
+            onClick={handdleRestore}
+            title="Fullscreen"
+          >
+            <RestoreIcon sx={{ color: "#fff" }} />
+          </IconButton>
+        </Tooltip>
+
+
+         {/* rotation */}
+         {isRotating ? (
+          <Tooltip title="Stop Rotation">
+            <IconButton
+              id="rotation_btn"
+              onClick={handleStopRotation}
+              title="Stop Rotation"
+            >
+            <SyncDisabledOutlinedIcon sx={{ color: "#fff" }} onClick={handleStopRotation} />
+          </IconButton>
+        </Tooltip>
+          ) : (
+            <Tooltip title="Start Rotation">
+            <IconButton
+              id="rotation_btn"
+              onClick={handleStartRotation}
+              title="Start Rotation"
+            >
+              <AutorenewOutlinedIcon sx={{ color: "#fff" }} onClick={handleStartRotation} />
+            </IconButton>
+          </Tooltip>
+          )}
+
+        {/* Fullscreen */}
+        <Tooltip title="Fullscreen">
+        <IconButton
+          id="fullscreen_btn"
+          onClick={handleFullscreen}
+          title="Fullscreen"
+        >
+          <Fullscreen sx={{ color: "#fff" }} />
+        </IconButton>
+      </Tooltip>
       </div>
 
-      <IconButton
-        id="fullscreen_btn"
-        onClick={handleFullscreen}
-        sx={{ position: "absolute", top: "15px", right: "15px", zIndex: 1, padding:0}}
-        title="Fullscreen"
-      >
-        <Fullscreen sx={{ color: "#fff" }} />
-      </IconButton>
-
-      <IconButton
-        id="restore_btn"
-        onClick={handdleRestore}
-        sx={{ position: "absolute", top: "15px", right: "85px", zIndex: 1, padding:0}}
-        title="Fullscreen"
-      >
-        <RestoreIcon sx={{ color: "#fff" }} />
-      </IconButton>
 
 
       {/* Organ Selection */}
+      {rendererInitialized && isChangePositionValueFeatureEnabled && (
       <div 
         style={{ 
             color:'white', 
             position: 'absolute', 
             width:'7%', 
-            top: '57%', 
+            top: '34%', 
             right: '0px', 
             zIndex: 1, 
             display:'flex', 
@@ -578,37 +767,10 @@ const updateActorPosition = (newValue, plane) => {
             </FormControl>
         )}
       </div>
-
-      {/* 3D Properties */}
-      <div 
-        style={{ 
-            color:'white', 
-            position: 'absolute', 
-            width:'9%', 
-            top: '65%', 
-            left: '2%', 
-            zIndex: 1, 
-            display:'flex', 
-            justifyContent:'space-around',
-            height:"25%"
-        }}>
-            <FormControl variant="outlined" style={{width:'100%', height:"20%", backgroundColor:'gray', color:'white'}}>
-                <InputLabel style={{color:"white"}} id="demo-simple-select-label">Property</InputLabel>
-                <Select 
-                    value={selectedProperty} 
-                    onChange={(e) => {
-                      setSelectedProperty(e.target.value);
-                    }}
-                    style={{color:'white', backgroundColor:"#EB3678",  width: "100%", height: "100%"}}
-                >
-                    <MenuItem value='ambient'>Ambient</MenuItem>
-                    
-                </Select>
-            </FormControl>
-      </div>
+      )}
 
         {/* shifting sliders */}
-        {rendererInitialized &&
+        {rendererInitialized && isChangePositionValueFeatureEnabled &&
             <div className='sliders-div-position'>
                 <div className="slider-container">
                     <label>Axial</label>
@@ -652,7 +814,7 @@ const updateActorPosition = (newValue, plane) => {
         }
 
         {/* Rotational sliders */}
-        {rendererInitialized &&
+        {rendererInitialized && isChangePositionValueFeatureEnabled &&
             <div className="sliders-div-rotation">
                 <div className="slider-container">
                     <label>X-axis</label>
@@ -694,25 +856,95 @@ const updateActorPosition = (newValue, plane) => {
                 </div>
             </div>
         }
+
+
+        {/* 3D Properties vivek */}
+      {rendererInitialized && isChangePropertyValueFeatureEnabled && (
+      <div 
+        style={{ 
+          position: 'absolute', 
+          display:"flex", 
+          justifyContent:"space-between", 
+          alignItems:'center', 
+          flexDirection:"column",  
+          top: '35%', 
+          width:"7%" ,
+          right: '0px', 
+          height: '60%', 
+          zIndex: 1 
+        }}>
+            <FormControl variant="outlined" style={{width:'100%', backgroundColor:'gray', color:'white'}}>
+                <InputLabel style={{color:"white"}} id="demo-simple-select-label">Property</InputLabel>
+                <Select 
+                    value={selectedProperty} 
+                    onChange={(e) => {
+                      setSelectedProperty(e.target.value);
+                    }}
+                    style={{color:'white', backgroundColor:"#EB3678",  width: "100%", height: "35px"}}
+                >
+                    <MenuItem value='diffuse'>Diffuse</MenuItem>
+                    <MenuItem value='specular'>Specular</MenuItem>
+                    <MenuItem value='specularPower'>Specular Power</MenuItem>
+                    <MenuItem value='specularColor'>Specular Color</MenuItem>
+                    <MenuItem value='opacity'>Opacity</MenuItem>
+                    <MenuItem value='ambient'>Ambient</MenuItem>
+                    <MenuItem value='roughnessTexture'>Roughness Texture</MenuItem>
+                    <MenuItem value='metallicTexture'>Metallic Texture</MenuItem>
+                </Select>
+            </FormControl>
+            <input 
+              type="range"
+              min="0"
+              max="100"
+              // defaultValue="0"
+              value={selectedPropertyValue[selectedProperty]}
+              className="vertical-slider"
+              onChange={(event) => {
+                setSelectedPropertyValue({...selectedPropertyValue, [selectedProperty]: parseInt(event.target.value)});
+                setPropertiesChanged(true);
+              }}
+              style={{
+                position: 'absolute',
+                top:'140px',
+                transform: 'rotate(-90deg)',
+                zIndex: 20000,
+                width: '190px',
+              }}
+            />
+            <span style={{color:'white', position:'absolute', top:"260px"}}>{selectedPropertyValue[selectedProperty]}</span>
+            
+            <Button 
+              className='save-properties'
+              style={{
+                backgroundColor: 'black',
+                color: 'white',
+                zIndex: 20000,
+                textTransform: 'none',
+                boxShadow:'0px 0px 5px #EB3678',
+                display: propertiesChanged ? 'block' : 'none',
+                position: 'absolute',
+                top: '300px',
+              }}
+              onClick={async () => {
+                try {
+                  const res = await axios.post(`${baseURL}/save-3d-properties/${id}`, {'properties': selectedPropertyValue});
+                  console.log(res.data);
+                  setPropertiesChanged(false);
+                  message.success('Properties saved successfully');
+                } catch (error) {
+                  console.log(error);
+                }
+              }}
+              >
+              Save
+            </Button>
+      </div>
+      )}
+
        
 
-
-
-      {/* 3d rendering */}
-      <div style={{ height: '100vh', width: '100vw' }} ref={containerRef} />
-
-
-      {/* controls icon to hide and show */}
-      <div style={{ position: 'absolute', top: '15px', left: '40px', zIndex: 1 }}>
-        {isControlsVisible ? (
-            <FilterListOutlinedIcon style={{color:'white', cursor:'pointer'}} onClick={() => setIsControlsVisible(false)} />
-        ) : (
-            <FilterListOffOutlinedIcon  style={{color:'white', cursor:'pointer'}}  onClick={() => setIsControlsVisible(true)} />
-        )}
-      </div>
-
-
-      {rendererInitialized  && (
+      {/* Cross Section */}
+      {rendererInitialized && isCrossSectionFeatureEnabled && (
         <div 
             style={{ 
                 position: 'absolute', 
@@ -720,7 +952,7 @@ const updateActorPosition = (newValue, plane) => {
                 justifyContent:"space-around", 
                 alignItems:'center', 
                 flexDirection:"column",  
-                top: '5%', 
+                top: '27%', 
                 width:"7%" ,
                 right: '0px', 
                 height: '40%', 
@@ -762,6 +994,24 @@ const updateActorPosition = (newValue, plane) => {
             />
         </div>
       )}
+
+
+      
+
+      {/* 3d rendering */}
+      <div style={{ height: '100vh', width: '100vw' }} ref={containerRef} />
+
+
+
+
+      {/* controls icon to hide and show */}
+      <div style={{ position: 'absolute', top: '15px', left: '40px', zIndex: 1 }}>
+        {isControlsVisible ? (
+            <FilterListOutlinedIcon style={{color:'white', cursor:'pointer'}} onClick={() => setIsControlsVisible(false)} />
+        ) : (
+            <FilterListOffOutlinedIcon  style={{color:'white', cursor:'pointer'}}  onClick={() => setIsControlsVisible(true)} />
+        )}
+      </div>
 
    
 

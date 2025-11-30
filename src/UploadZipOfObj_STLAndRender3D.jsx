@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react';
 import JSZip from 'jszip';
 import "./Uploads.css"
 // import ObjAndMtlFilesRenderer from './components/ObjAndMtlFilesRenderer3';
-import Surgical3D from './components/Surgical3D'
+import Lungs3D3 from './components/Lungs3D3'
 
 const UploadZipOfObjAndSTLAndRender3D = () => {
   const zipInputRef = useRef(null);
@@ -84,7 +84,7 @@ const UploadZipOfObjAndSTLAndRender3D = () => {
       )}
 
       <div>
-        {isRendered && <Surgical3D renderingElements={renderingElements} />}
+        {isRendered && <Lungs3D3 renderingElements={renderingElements} />}
       </div>
     </div>
   );
