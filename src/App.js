@@ -9,7 +9,7 @@ import UploadOBJandSTLAndRender3D from './UploadOBJandSTLAndRender3D';
 // import UploadZipOfObjAndRender3D from './UploadZipOfObjAndRender3D';
 // import Liver from "./Liver"
 import UploadZipOfObjAndSTLAndRender3D from './UploadZipOfObj_STLAndRender3D';
-import TestRender from './testRender';
+import OBJMTLFileRenderer from './OBJMTLFileRenderer';
 
 function App() {
   return (
@@ -18,13 +18,13 @@ function App() {
     <Routes>
       {/* <Route path="/cone" element={<ConeRender3D />} /> */}
       {/* <Route path='/read' element={<ReadAndRender3D />} /> */}
-      <Route path='/upload-obj-stl' element={<UploadOBJandSTLAndRender3D />} />
+      {/* <Route path='/upload-obj-stl' element={<UploadOBJandSTLAndRender3D />} /> */}
       {/* <Route path='/upload-json' element={<UploadJSONAndRender3D />} /> */}
       {/* <Route path='/upload-zip' element={<UploadZipAndRender3D />} /> */}
       {/* <Route path='/upload-zip-objs' element={<UploadZipOfObjAndRender3D />} /> */}
-      <Route path='/' element={<UploadZipOfObjAndSTLAndRender3D />} />
+      <Route path='/zip' element={<UploadZipOfObjAndSTLAndRender3D />} />
       {/* <Route path='/' element={<Liver />} /> */}
-      <Route path='/render/:id' element={<TestRender />} />
+      <Route path='/render/:path' element={<OBJMTLFileRenderer />} />
       
     </Routes>
     </BrowserRouter>

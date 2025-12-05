@@ -1,70 +1,66 @@
-# Getting Started with Create React App
+# 3D Models - Auto-Generate Manifests
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## How It Works
 
-## Available Scripts
+The `OBJMTLFileRenderer` component automatically loads .obj and .mtl files from any folder in `public/3d-models/`. 
 
-In the project directory, you can run:
+Since browsers cannot list directory contents directly, each folder needs a `manifest.json` file that lists the available .obj and .mtl files.
 
-### `npm start`
+## Adding New 3D Models
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### Step 1: Add Your Files
+Create a new folder in `public/3d-models/` and add your .obj and .mtl files:
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+```
+public/3d-models/
+  ├── liver/
+  │   ├── liver_segmentation.nii.gz.obj
+  │   └── liver_segmentation.nii.gz.mtl
+  ├── lungs/
+  │   ├── lung_left.obj
+  │   ├── lung_left.mtl
+  │   ├── lung_right.obj
+  │   └── lung_right.mtl
+  └── heart/          ← Your new folder
+      ├── heart.obj
+      └── heart.mtl
+```
 
-### `npm test`
+### Step 2: Generate Manifests
+Run this command to automatically generate manifest.json files for ALL folders:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```bash
+npm run generate-manifests
+```
 
-### `npm run build`
+This will scan all folders in `public/3d-models/` and create/update manifest.json files.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Step 3: Access Your Model
+Navigate to: `/render/{folder_name}`
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Example: `/render/heart`
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## What Gets Generated
 
-### `npm run eject`
+For each folder, a `manifest.json` file is created:
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+```json
+{
+  "objFiles": ["heart.obj"],
+  "mtlFiles": ["heart.mtl"]
+}
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Important Notes
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+- ✅ Run `npm run generate-manifests` **every time** you add/remove/rename .obj or .mtl files
+- ✅ The script automatically finds all .obj and .mtl files in each folder
+- ✅ You can have multiple .obj and .mtl files in one folder
+- ✅ File names can be anything - no hardcoding required!
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## Workflow
 
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+1. Add new 3D model files to a folder in `public/3d-models/`
+2. Run `npm run generate-manifests`
+3. Start/refresh your app
+4. Navigate to `/render/{folder_name}`
