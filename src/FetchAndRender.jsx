@@ -2,6 +2,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import Lungs3D3 from "./components/Lungs3D3"
 import Liver from "./components/Liver"
+import { baseURL } from './config';
 
 
 const FetchAndRender = () => {
@@ -20,7 +21,7 @@ const FetchAndRender = () => {
                 setLoading(true);
                 setError(null);
 
-                const response = await fetch(`http://localhost:5000/load-model/${path}`);
+                const response = await fetch(`${baseURL}/load-model/${path}`);
 
                 if (!response.ok) {
                     throw new Error("Failed to load model from server");

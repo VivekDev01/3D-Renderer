@@ -28,7 +28,7 @@ import RestoreIcon from '@mui/icons-material/Restore';
 import axios from 'axios';
 import { message } from 'antd'
 import { useParams } from 'react-router-dom';
-// import { baseURL } from '../config';
+import { baseURL } from '../config';
 import MagicChange from '@mui/icons-material/AutoFixHigh';
 import CrossSection from '@mui/icons-material/Adjust';
 import RotationIcon from '@mui/icons-material/ThreeSixty';
@@ -45,7 +45,6 @@ const getOrganDetails = (name) => {
 };
 
 const ObjFilesRenderer = (props) => {
-  const baseURL = "http://localhost:5000";
   const containerRef = useRef(null);
   const [rendererInitialized, setRendererInitialized] = useState(false);
   const [renderer, setRenderer] = useState(null);
