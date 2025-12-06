@@ -111,22 +111,22 @@ const ObjFilesRenderer = (props) => {
   };
 
 
-  const id = useParams().id;
-  useEffect(() => {
-    const getProperties = async () => {
-      try {
-        const res = await axios.get(`${baseURL}/get-3d-properties/${id}`);
-        console.log(res.data);
-        if (res.data.success) {
-          setSelectedPropertyValue(res.data.properties.properties);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    }
+  // const id = useParams().id;
+  // useEffect(() => {
+  //   const getProperties = async () => {
+  //     try {
+  //       const res = await axios.get(`${baseURL}/get-3d-properties/${props.path}`);
+  //       console.log(res.data);
+  //       if (res.data.success) {
+  //         setSelectedPropertyValue(res.data.properties.properties);
+  //       }
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   }
 
-    getProperties();
-  }, []);
+  //   getProperties();
+  // }, []);
 
 
   // Function to update clipping planes for all actors
@@ -971,7 +971,7 @@ const ObjFilesRenderer = (props) => {
           />
           <span style={{ color: 'white', position: 'absolute', top: "260px" }}>{selectedPropertyValue[selectedProperty]}</span>
 
-          <Button
+          {/* <Button
             className='save-properties'
             style={{
               backgroundColor: 'black',
@@ -985,7 +985,7 @@ const ObjFilesRenderer = (props) => {
             }}
             onClick={async () => {
               try {
-                const res = await axios.post(`${baseURL}/save-3d-properties/${id}`, { 'properties': selectedPropertyValue });
+                const res = await axios.post(`${baseURL}/save-3d-properties/${props.path}`, { 'properties': selectedPropertyValue });
                 console.log(res.data);
                 setPropertiesChanged(false);
                 message.success('Properties saved successfully');
@@ -995,7 +995,7 @@ const ObjFilesRenderer = (props) => {
             }}
           >
             Save
-          </Button>
+          </Button> */}
         </div>
       )}
 
