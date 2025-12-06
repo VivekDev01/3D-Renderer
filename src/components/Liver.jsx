@@ -35,11 +35,12 @@ import PositionIcon from '@mui/icons-material/PictureInPicture';
 import LiverIcon from '../svgs/liver.svg';
 import TumorIcon from '../svgs/tumor.svg';
 import ArteryIcon from '../svgs/artery.svg';
-
+import VeinIcon from '../svgs/veins.svg';
 const getOrganDetails = (name) => {
-  if (name === 'mtl1') return { icon: LiverIcon, label: 'Liver' };
-  if (name === 'mtl110503') return { icon: TumorIcon, label: 'Tumor' };
-  if (name === 'mtl111289') return { icon: ArteryIcon, label: 'Arteries' };
+  if (name === 'Liver') return { icon: LiverIcon, label: 'Liver' };
+  if (name.includes('Tumor')) return { icon: TumorIcon, label: 'Tumor' };
+  if (name.includes('Artery')) return { icon: ArteryIcon, label: 'Arteries' };
+  if (name.includes('Vein')) return { icon: VeinIcon, label: 'Veins' };
   return { icon: null, label: name };
 };
 
@@ -205,7 +206,7 @@ const ObjFilesRenderer = (props) => {
           const diffuseColor = material ? material.Kd.map(parseFloat) : [1, 1, 1];
           const initialColor = `#${rgbToHex(diffuseColor[0] * 255)}${rgbToHex(diffuseColor[1] * 255)}${rgbToHex(diffuseColor[2] * 255)}`;
 
-          const visibilityMode = name === 'mtl1' ? 'transparent' : 'visible';
+          const visibilityMode = name === 'Liver' ? 'transparent' : 'visible';
           if (visibilityMode === 'transparent') {
             newActor.getProperty().setOpacity(0.5);
           }
@@ -1036,7 +1037,7 @@ const ObjFilesRenderer = (props) => {
                 return (
                   <div style={{ display: 'flex', alignItems: 'center' }}>
                     {icon ? (
-                      <Tooltip title={label}>
+                      <Tooltip title={actorObj.name}>
                         <div
                           style={{
                             width: '60px',
@@ -1124,7 +1125,7 @@ const ObjFilesRenderer = (props) => {
               <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
                 {(() => {
                   const { icon } = getOrganDetails(
-                    organ === 'Liver' ? 'mtl1' :
+                    organ === 'Liver' ? 'Liver' :
                       organ === 'Tumor' ? 'mtl110503' :
                         'mtl111289'
                   );
