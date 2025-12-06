@@ -13,6 +13,7 @@ const FetchAndRender = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const { path } = useParams();
+    const [details, setDetails] = useState({});
 
     let filePath = `/3d-models/${path}`;
     console.log('File path:', filePath);
@@ -32,6 +33,7 @@ const FetchAndRender = () => {
                 const data = await response.json();
 
                 setRenderingElements(data.renderingElements);
+                setDetails(data.details);
                 setIsRendered(true);
                 setLoading(false);
             } catch (err) {
@@ -59,9 +61,9 @@ const FetchAndRender = () => {
             {error && <div style={{ textAlign: 'center', padding: '20px', color: 'red' }}>Error: {error}</div>}
             {isRendered && (
                 path.includes('liver') ? (
-                    <Liver path={path} renderingElements={renderingElements} />
+                    <Liver path={path} renderingElements={renderingElements} details={details} />
                 ) : (
-                    <Lungs3D3 path={path} renderingElements={renderingElements} />
+                    <Lungs3D3 path={path} renderingElements={renderingElements} details={details} />
                 )
             )}
         </div>

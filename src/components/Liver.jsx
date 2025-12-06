@@ -770,41 +770,41 @@ const ObjFilesRenderer = (props) => {
 
       {/* Organ Selection */}
       {rendererInitialized && isChangePositionValueFeatureEnabled && (
-        <div 
-          style={{ 
-              color:'white', 
-              position: 'absolute', 
-              width:'7%', 
-              top: '34%', 
-              right: '0px', 
-              zIndex: 1, 
-              display:'flex', 
-              justifyContent:'space-around',
-              height:"25%"
+        <div
+          style={{
+            color: 'white',
+            position: 'absolute',
+            width: '7%',
+            top: '34%',
+            right: '0px',
+            zIndex: 1,
+            display: 'flex',
+            justifyContent: 'space-around',
+            height: "25%"
           }}>
           {actors.length > 0 && (
-              <FormControl variant="outlined" style={{width:'100%', height:"20%", backgroundColor:'gray', color:'white'}}>
-                  <InputLabel style={{color:"white"}} id="demo-simple-select-label">Organ</InputLabel>
-                  <Select 
-                      value={selectedActor} 
-                      onChange={(e) => {
-                        setSelectedActor(e.target.value);
-                        setPositionValueAxial(0);
-                        setPositionValueCoronal(0);
-                        setPositionValueSagittal(0);
-                        setRotationValueAxial(0);
-                        setRotationValueCoronal(0);
-                        setRotationValueSagittal(0);
-                      }}
-                      style={{color:'white', backgroundColor:"#EB3678",  width: "100%", height: "100%"}}
-                  >
-                  {actors.map((actorObj, index) => (
-                      <MenuItem key={index} value={index}>
-                      {actorObj.name}
-                      </MenuItem>
-                  ))}
-                  </Select>
-              </FormControl>
+            <FormControl variant="outlined" style={{ width: '100%', height: "20%", backgroundColor: 'gray', color: 'white' }}>
+              <InputLabel style={{ color: "white" }} id="demo-simple-select-label">Organ</InputLabel>
+              <Select
+                value={selectedActor}
+                onChange={(e) => {
+                  setSelectedActor(e.target.value);
+                  setPositionValueAxial(0);
+                  setPositionValueCoronal(0);
+                  setPositionValueSagittal(0);
+                  setRotationValueAxial(0);
+                  setRotationValueCoronal(0);
+                  setRotationValueSagittal(0);
+                }}
+                style={{ color: 'white', backgroundColor: "#EB3678", width: "100%", height: "100%" }}
+              >
+                {actors.map((actorObj, index) => (
+                  <MenuItem key={index} value={index}>
+                    {actorObj.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
           )}
         </div>
       )}
@@ -1033,204 +1033,260 @@ const ObjFilesRenderer = (props) => {
         <div className="controls">
           {actors.map((actorObj, index) => (
             !actorObj.name.includes(controlItemTypeToHide) && (
-            <div key={index} style={{ color: actorObj.color }} className="control-item">
-              {(() => {
-                const { icon, label } = getOrganDetails(actorObj.name);
-                const colorPickerRef = React.createRef();
-                return (
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    {icon ? (
-                      // <Tooltip title={actorObj.name}>
-                      <div style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column' }}>
-                        <div
-                          style={{
-                            width: '40px',
-                            height: '40px',
-                            backgroundColor: actorObj.color,
-                            opacity: actorObj.visibilityMode === 'visible' ? 1 : actorObj.visibilityMode === 'transparent' ? 0.7 : 0.4,
-                            maskImage: `url(${icon})`,
-                            maskSize: 'contain',
-                            maskRepeat: 'no-repeat',
-                            maskPosition: 'center',
-                            WebkitMaskImage: `url(${icon})`,
-                            WebkitMaskSize: 'contain',
-                            WebkitMaskRepeat: 'no-repeat',
-                            WebkitMaskPosition: 'center',
-                            cursor: 'pointer',
-                            marginBottom: '6px'
-                          }}
-                          onClick={() => toggleVisibility(index)}
-                          onContextMenu={(e) => {
-                            e.preventDefault();
-                            if (colorPickerRef.current) {
-                              colorPickerRef.current.click();
-                            }
-                          }}
-                        />
-                        <span onClick={() => toggleVisibility(index)} style={{ cursor: 'pointer', textAlign: 'center', fontSize: '12px' }}>{actorObj.name}</span>
+              <div key={index} style={{ color: actorObj.color }} className="control-item">
+                {(() => {
+                  const { icon, label } = getOrganDetails(actorObj.name);
+                  const colorPickerRef = React.createRef();
+                  return (
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      {icon ? (
+                        // <Tooltip title={actorObj.name}>
+                        <div style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column' }}>
+                          <div
+                            style={{
+                              width: '40px',
+                              height: '40px',
+                              backgroundColor: actorObj.color,
+                              opacity: actorObj.visibilityMode === 'visible' ? 1 : actorObj.visibilityMode === 'transparent' ? 0.7 : 0.4,
+                              maskImage: `url(${icon})`,
+                              maskSize: 'contain',
+                              maskRepeat: 'no-repeat',
+                              maskPosition: 'center',
+                              WebkitMaskImage: `url(${icon})`,
+                              WebkitMaskSize: 'contain',
+                              WebkitMaskRepeat: 'no-repeat',
+                              WebkitMaskPosition: 'center',
+                              cursor: 'pointer',
+                              marginBottom: '6px'
+                            }}
+                            onClick={() => toggleVisibility(index)}
+                            onContextMenu={(e) => {
+                              e.preventDefault();
+                              if (colorPickerRef.current) {
+                                colorPickerRef.current.click();
+                              }
+                            }}
+                          />
+                          <span onClick={() => toggleVisibility(index)} style={{ cursor: 'pointer', textAlign: 'center', fontSize: '12px' }}>{actorObj.name}</span>
                         </div>
-                      // </Tooltip>
-                    ) : (
-                      <span onClick={() => toggleVisibility(index)} style={{ cursor: 'pointer', fontSize: '12px' }}>{actorObj.name}</span>
-                    )}
-                    <input
-                      ref={colorPickerRef}
-                      type="color"
-                      value={actorObj.color}
-                      onChange={(e) => handleColorChange(index, e.target.value)}
-                      style={{
-                        visibility: 'hidden',
-                        position: 'absolute',
-                        width: 0,
-                        height: 0
-                      }}
-                    />
-                  </div>
-                );
-              })()}
+                        // </Tooltip>
+                      ) : (
+                        <span onClick={() => toggleVisibility(index)} style={{ cursor: 'pointer', fontSize: '12px' }}>{actorObj.name}</span>
+                      )}
+                      <input
+                        ref={colorPickerRef}
+                        type="color"
+                        value={actorObj.color}
+                        onChange={(e) => handleColorChange(index, e.target.value)}
+                        style={{
+                          visibility: 'hidden',
+                          position: 'absolute',
+                          width: 0,
+                          height: 0
+                        }}
+                      />
+                    </div>
+                  );
+                })()}
 
-            </div>
-          )))}
+              </div>
+            )))}
         </div>
       )}
 
-    {/* Show Hidden Organs */}
-    {rendererInitialized  && isControlsVisible && (
-      <div className="controls-hidden">
+      {/* Show Hidden Organs */}
+      {rendererInitialized && isControlsVisible && (
+        <div className="controls-hidden">
           {actors.map((actorObj, index) => (
             actorObj.name.includes(controlItemTypeToHide) && (
-            <div key={index} style={{ color: actorObj.color }} className="control-item">
-              {(() => {
-                const { icon, label } = getOrganDetails(actorObj.name);
-                const colorPickerRef = React.createRef();
-                return (
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    {icon ? (
-                      // <Tooltip title={actorObj.name}>
-                      <div style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column' }}>
-                        <div
-                          style={{
-                            width: '40px',
-                            height: '40px',
-                            backgroundColor: actorObj.color,
-                            opacity: actorObj.visibilityMode === 'visible' ? 1 : actorObj.visibilityMode === 'transparent' ? 0.7 : 0.4,
-                            maskImage: `url(${icon})`,
-                            maskSize: 'contain',
-                            maskRepeat: 'no-repeat',
-                            maskPosition: 'center',
-                            WebkitMaskImage: `url(${icon})`,
-                            WebkitMaskSize: 'contain',
-                            WebkitMaskRepeat: 'no-repeat',
-                            WebkitMaskPosition: 'center',
-                            cursor: 'pointer',
-                          }}
-                          onClick={() => toggleVisibility(index)}
-                          onContextMenu={(e) => {
-                            e.preventDefault();
-                            if (colorPickerRef.current) {
-                              colorPickerRef.current.click();
-                            }
-                          }}
-                        />
-                        <span onClick={() => toggleVisibility(index)} style={{ cursor: 'pointer', textAlign: 'center', fontSize: '12px' }}>{actorObj.name}</span>
+              <div key={index} style={{ color: actorObj.color }} className="control-item">
+                {(() => {
+                  const { icon, label } = getOrganDetails(actorObj.name);
+                  const colorPickerRef = React.createRef();
+                  return (
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      {icon ? (
+                        // <Tooltip title={actorObj.name}>
+                        <div style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column' }}>
+                          <div
+                            style={{
+                              width: '40px',
+                              height: '40px',
+                              backgroundColor: actorObj.color,
+                              opacity: actorObj.visibilityMode === 'visible' ? 1 : actorObj.visibilityMode === 'transparent' ? 0.7 : 0.4,
+                              maskImage: `url(${icon})`,
+                              maskSize: 'contain',
+                              maskRepeat: 'no-repeat',
+                              maskPosition: 'center',
+                              WebkitMaskImage: `url(${icon})`,
+                              WebkitMaskSize: 'contain',
+                              WebkitMaskRepeat: 'no-repeat',
+                              WebkitMaskPosition: 'center',
+                              cursor: 'pointer',
+                            }}
+                            onClick={() => toggleVisibility(index)}
+                            onContextMenu={(e) => {
+                              e.preventDefault();
+                              if (colorPickerRef.current) {
+                                colorPickerRef.current.click();
+                              }
+                            }}
+                          />
+                          <span onClick={() => toggleVisibility(index)} style={{ cursor: 'pointer', textAlign: 'center', fontSize: '12px' }}>{actorObj.name}</span>
                         </div>
-                      // </Tooltip>
-                    ) : (
-                      <span onClick={() => toggleVisibility(index)} style={{ cursor: 'pointer', fontSize: '12px' }}>{actorObj.name}</span>
-                    )}
-                    <input
-                      ref={colorPickerRef}
-                      type="color"
-                      value={actorObj.color}
-                      onChange={(e) => handleColorChange(index, e.target.value)}
-                      style={{
-                        visibility: 'hidden',
-                        position: 'absolute',
-                        width: 0,
-                        height: 0
-                      }}
-                    />
-                  </div>
-                );
-              })()}
+                        // </Tooltip>
+                      ) : (
+                        <span onClick={() => toggleVisibility(index)} style={{ cursor: 'pointer', fontSize: '12px' }}>{actorObj.name}</span>
+                      )}
+                      <input
+                        ref={colorPickerRef}
+                        type="color"
+                        value={actorObj.color}
+                        onChange={(e) => handleColorChange(index, e.target.value)}
+                        style={{
+                          visibility: 'hidden',
+                          position: 'absolute',
+                          width: 0,
+                          height: 0
+                        }}
+                      />
+                    </div>
+                  );
+                })()}
 
-            </div>
-          )))}
+              </div>
+            )))}
         </div>
-    )}
+      )}
 
 
       {/* Findings Panel */}
+      {/* Findings Panel - Modern UI with Details */}
       {rendererInitialized && isFindingsVisible && (
         <div
           style={{
             position: 'absolute',
-            top: '20%',
+            top: '10%',
             right: '20px',
-            width: '300px',
-            backgroundColor: 'rgba(20, 20, 20, 0.75)',
-            backdropFilter: 'blur(10px)',
-            borderRadius: '15px',
-            padding: '20px',
+            width: '320px',
+            backgroundColor: 'rgba(20, 20, 20, 0.85)',
+            backdropFilter: 'blur(16px)',
+            borderRadius: '20px',
+            padding: '25px',
             color: 'white',
-            boxShadow: '0 8px 32px 0 rgba(0, 0, 0, 0.37)',
-            border: '1px solid rgba(255, 255, 255, 0.18)',
+            boxShadow: '0 10px 40px rgba(0, 0, 0, 0.5)',
+            border: '1px solid rgba(255, 255, 255, 0.1)',
             zIndex: 10,
-            maxHeight: '60%',
+            maxHeight: '75%',
             overflowY: 'auto',
-            fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif'
+            fontFamily: '"Roboto", sans-serif',
+            animation: 'fadeIn 0.3s ease-out',
           }}
+          className="findings-details-panel"
         >
-          <h2 style={{
-            marginTop: 0,
+          <div style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
             marginBottom: '20px',
-            fontSize: '1.5rem',
-            borderBottom: '1px solid rgba(255,255,255,0.2)',
-            paddingBottom: '10px',
-            color: '#EB3678'
+            borderBottom: '2px solid rgba(235, 54, 120, 0.5)',
+            paddingBottom: '10px'
           }}>
-            Radiological Findings
-          </h2>
+            <h2 style={{
+              margin: 0,
+              fontSize: '1.4rem',
+              fontWeight: 700,
+              color: '#fff',
+              letterSpacing: '0.5px'
+            }}>
+              Detailed Analysis
+            </h2>
+          </div>
 
-          {Object.entries(demoFindings).map(([organ, findings]) => (
-            <div key={organ} style={{ marginBottom: '20px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
-                {(() => {
-                  const { icon } = getOrganDetails(
-                    organ === 'Liver' ? 'Liver' :
-                      organ === 'Tumor' ? 'mtl110503' :
-                        'mtl111289'
-                  );
-                  return icon ? (
-                    <div
-                      style={{
-                        width: '24px',
-                        height: '24px',
-                        backgroundColor: organ === 'Liver' ? '#CD5C5C' : organ === 'Tumor' ? '#8B4513' : '#FF4444',
-                        maskImage: `url(${icon})`,
-                        maskSize: 'contain',
-                        maskRepeat: 'no-repeat',
-                        maskPosition: 'center',
-                        WebkitMaskImage: `url(${icon})`,
-                        WebkitMaskSize: 'contain',
-                        WebkitMaskRepeat: 'no-repeat',
-                        WebkitMaskPosition: 'center',
-                        marginRight: '10px'
-                      }}
-                    />
-                  ) : null;
-                })()}
-                <h3 style={{ margin: 0, fontSize: '1.2rem' }}>{organ}</h3>
-              </div>
-              <ul style={{ paddingLeft: '20px', margin: 0 }}>
-                {findings.map((finding, idx) => (
-                  <li key={idx} style={{ marginBottom: '5px', fontSize: '0.9rem', lineHeight: '1.4' }}>
-                    {finding}
-                  </li>
-                ))}
-              </ul>
+          {/* Liver Volume Hero Card */}
+          <div style={{
+            background: 'linear-gradient(135deg, rgba(235, 54, 120, 0.2), rgba(235, 54, 120, 0.05))',
+            borderRadius: '16px',
+            padding: '20px',
+            marginBottom: '25px',
+            border: '1px solid rgba(235, 54, 120, 0.3)',
+            display: 'flex',
+            alignItems: 'center',
+            boxShadow: '0 4px 15px rgba(0,0,0,0.2)'
+          }}>
+            <div style={{
+              width: '48px', height: '48px',
+              maskImage: `url(${LiverIcon})`,
+              WebkitMaskImage: `url(${LiverIcon})`,
+              maskSize: 'contain',
+              WebkitMaskSize: 'contain',
+              backgroundColor: '#EB3678',
+              maskRepeat: 'no-repeat',
+              WebkitMaskRepeat: 'no-repeat',
+              marginRight: '15px'
+            }}></div>
+            <div>
+              <div style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.7)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '4px' }}>Liver Volume</div>
+              <div style={{ fontSize: '1.6rem', fontWeight: '800', lineHeight: 1 }}>{props.details.liver_volume}</div>
             </div>
-          ))}
+          </div>
+
+          <h3 style={{ fontSize: '1.0rem', marginBottom: '15px', color: '#EB3678', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 600 }}>Tumor Breakdown</h3>
+
+          {/* Tumors List */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+            {Object.entries(props.details).filter(([key]) => key.startsWith('tumor')).map(([key, data], index) => {
+              const tumorNum = key.split('_')[1];
+              return (
+                <div key={key} style={{
+                  backgroundColor: 'rgba(255, 255, 255, 0.03)',
+                  borderRadius: '12px',
+                  padding: '15px',
+                  borderLeft: '4px solid #FF8A80',
+                  transition: 'background-color 0.2s',
+                  cursor: 'default'
+                }}
+                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.08)'}
+                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.03)'}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', marginBottom: '12px' }}>
+                    <div style={{
+                      width: '20px', height: '20px',
+                      maskImage: `url(${TumorIcon})`,
+                      WebkitMaskImage: `url(${TumorIcon})`,
+                      maskSize: 'contain',
+                      WebkitMaskSize: 'contain',
+                      maskRepeat: 'no-repeat',
+                      WebkitMaskRepeat: 'no-repeat',
+                      backgroundColor: '#FF8A80',
+                      marginRight: '10px'
+                    }} />
+                    <span style={{ fontWeight: '700', fontSize: '1.0rem', color: '#fff' }}>Tumor {tumorNum}</span>
+                  </div>
+
+                  <div style={{
+                    display: 'grid',
+                    gridTemplateColumns: '1fr 1fr',
+                    gap: '10px',
+                    fontSize: '0.8rem'
+                  }}>
+                    <div style={{ background: 'rgba(0,0,0,0.2)', padding: '8px', borderRadius: '8px' }}>
+                      <span style={{ display: 'block', color: 'rgba(255,255,255,0.5)', marginBottom: '4px' }}>Volume</span>
+                      <span style={{ fontWeight: '600', color: '#fff' }}>{data.volume}</span>
+                    </div>
+                    <div style={{ background: 'rgba(0,0,0,0.2)', padding: '8px', borderRadius: '8px' }}>
+                      <span style={{ display: 'block', color: 'rgba(255,255,255,0.5)', marginBottom: '4px' }}>Max Diameter</span>
+                      <span style={{ fontWeight: '600', color: '#fff' }}>{data.maximum_diameter}</span>
+                    </div>
+                    <div style={{ gridColumn: '1 / -1', background: 'rgba(0,0,0,0.2)', padding: '8px', borderRadius: '8px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <span style={{ color: 'rgba(255,255,255,0.5)' }}>Distance to Artery</span>
+                      <span style={{ fontWeight: '600', color: '#fff' }}>{data.nearest_artery_distance}</span>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </div>
       )}
 
