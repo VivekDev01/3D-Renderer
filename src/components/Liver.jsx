@@ -174,8 +174,8 @@ const ObjFilesRenderer = (props) => {
           materialsReader.applyMaterialToActor(name, newActor);
           newRenderer.addActor(newActor);
 
-          // newActor.setOrientation(270, 0, 0); // Breast, human skelton
-          newActor.setOrientation(90, 270, 0);  // KUB
+          newActor.setOrientation(270, 0, 0); // Breast, human skelton
+          // newActor.setOrientation(90, 270, 0);  // KUB
 
 
           newActor.getProperty().setInterpolationToPhong();
