@@ -3,6 +3,8 @@ import { useParams } from 'react-router-dom';
 import Lungs3D3 from "./components/Lungs3D3"
 import Liver from "./components/Liver"
 import { baseURL } from './config';
+import LiverGIF from './gifs/liver.gif';
+
 
 
 const FetchAndRender = () => {
@@ -46,7 +48,14 @@ const FetchAndRender = () => {
 
     return (
         <div>
-            {loading && <div style={{ textAlign: 'center', padding: '20px' }}>Loading 3D models...</div>}
+            {loading && <div style={{ textAlign: 'center', top: '50%', padding: '20px' }}>
+                <img
+                    src={LiverGIF}
+                    alt="Liver"
+                    style={{ width: '300px', height: '300px' }}
+                />
+                
+            </div>}
             {error && <div style={{ textAlign: 'center', padding: '20px', color: 'red' }}>Error: {error}</div>}
             {isRendered && (
                 path.includes('liver') ? (

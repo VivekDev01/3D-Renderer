@@ -25,7 +25,6 @@ import {
   Swipe,
 } from "@mui/icons-material";
 import RestoreIcon from '@mui/icons-material/Restore';
-import axios from 'axios';
 import { message } from 'antd'
 import { useParams } from 'react-router-dom';
 import { baseURL } from '../config';
@@ -109,25 +108,6 @@ const ObjFilesRenderer = (props) => {
       "Variant anatomy: Michels Type I"
     ]
   };
-
-
-  // const id = useParams().id;
-  // useEffect(() => {
-  //   const getProperties = async () => {
-  //     try {
-  //       const res = await axios.get(`${baseURL}/get-3d-properties/${props.path}`);
-  //       console.log(res.data);
-  //       if (res.data.success) {
-  //         setSelectedPropertyValue(res.data.properties.properties);
-  //       }
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   }
-
-  //   getProperties();
-  // }, []);
-
 
   // Function to update clipping planes for all actors
   const updateClippingPlanes = (plane) => {
@@ -970,32 +950,6 @@ const ObjFilesRenderer = (props) => {
             }}
           />
           <span style={{ color: 'white', position: 'absolute', top: "260px" }}>{selectedPropertyValue[selectedProperty]}</span>
-
-          {/* <Button
-            className='save-properties'
-            style={{
-              backgroundColor: 'black',
-              color: 'white',
-              zIndex: 20000,
-              textTransform: 'none',
-              boxShadow: '0px 0px 5px #EB3678',
-              display: propertiesChanged ? 'block' : 'none',
-              position: 'absolute',
-              top: '300px',
-            }}
-            onClick={async () => {
-              try {
-                const res = await axios.post(`${baseURL}/save-3d-properties/${props.path}`, { 'properties': selectedPropertyValue });
-                console.log(res.data);
-                setPropertiesChanged(false);
-                message.success('Properties saved successfully');
-              } catch (error) {
-                console.log(error);
-              }
-            }}
-          >
-            Save
-          </Button> */}
         </div>
       )}
 
