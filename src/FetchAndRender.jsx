@@ -49,15 +49,25 @@ const FetchAndRender = () => {
     }, [path, filePath]);
 
     return (
-        <div>
-            {loading && <div style={{ textAlign: 'center', top: '50%', padding: '20px' }}>
+        <div style={{ width: '100%', height: '100%' }}>
+            {loading && 
+            <div
+                style={{
+                    display: 'flex',
+                    width: '100%',
+                    height: '100vh',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    flexDirection: 'column',
+                }}
+                >
                 <img
                     src={LiverGIF}
                     alt="Liver"
                     style={{ width: '300px', height: '300px' }}
                 />
-                
-            </div>}
+                </div>
+            }
             {error && <div style={{ textAlign: 'center', padding: '20px', color: 'red' }}>Error: {error}</div>}
             {isRendered && (
                 path.includes('liver') ? (
