@@ -87,6 +87,8 @@ const ObjFilesRenderer = (props) => {
   const [isChangePositionValueFeatureEnabled, setIsChangePositionValueFeatureEnabled] = useState(false);
   const [isChangeRotationValueFeatureEnabled, setIsChangeRotationValueFeatureEnabled] = useState(false);
   const [isFindingsVisible, setIsFindingsVisible] = useState(false);
+  const [isMoreControlItemsVisible, setIsMoreControlItemsVisible] = useState(false);
+  const [controlItemTypeToHide, setControlItemTypeToHide] = useState('Tumor');
 
   const demoFindings = {
     Liver: [
@@ -1030,18 +1032,20 @@ const ObjFilesRenderer = (props) => {
       {rendererInitialized && isControlsVisible && (
         <div className="controls">
           {actors.map((actorObj, index) => (
+            !actorObj.name.includes(controlItemTypeToHide) && (
             <div key={index} style={{ color: actorObj.color }} className="control-item">
               {(() => {
                 const { icon, label } = getOrganDetails(actorObj.name);
                 const colorPickerRef = React.createRef();
                 return (
-                  <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     {icon ? (
-                      <Tooltip title={actorObj.name}>
+                      // <Tooltip title={actorObj.name}>
+                      <div style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column' }}>
                         <div
                           style={{
-                            width: '60px',
-                            height: '60px',
+                            width: '40px',
+                            height: '40px',
                             backgroundColor: actorObj.color,
                             opacity: actorObj.visibilityMode === 'visible' ? 1 : actorObj.visibilityMode === 'transparent' ? 0.7 : 0.4,
                             maskImage: `url(${icon})`,
@@ -1053,7 +1057,7 @@ const ObjFilesRenderer = (props) => {
                             WebkitMaskRepeat: 'no-repeat',
                             WebkitMaskPosition: 'center',
                             cursor: 'pointer',
-                            marginRight: '8px'
+                            marginBottom: '6px'
                           }}
                           onClick={() => toggleVisibility(index)}
                           onContextMenu={(e) => {
@@ -1063,9 +1067,11 @@ const ObjFilesRenderer = (props) => {
                             }
                           }}
                         />
-                      </Tooltip>
+                        <span onClick={() => toggleVisibility(index)} style={{ cursor: 'pointer', textAlign: 'center', fontSize: '12px' }}>{actorObj.name}</span>
+                        </div>
+                      // </Tooltip>
                     ) : (
-                      <span onClick={() => toggleVisibility(index)} style={{ cursor: 'pointer' }}>{label}</span>
+                      <span onClick={() => toggleVisibility(index)} style={{ cursor: 'pointer', fontSize: '12px' }}>{actorObj.name}</span>
                     )}
                     <input
                       ref={colorPickerRef}
@@ -1084,9 +1090,75 @@ const ObjFilesRenderer = (props) => {
               })()}
 
             </div>
-          ))}
+          )))}
         </div>
       )}
+
+    {/* Show Hidden Organs */}
+    {rendererInitialized  && isControlsVisible && (
+      <div className="controls-hidden">
+          {actors.map((actorObj, index) => (
+            actorObj.name.includes(controlItemTypeToHide) && (
+            <div key={index} style={{ color: actorObj.color }} className="control-item">
+              {(() => {
+                const { icon, label } = getOrganDetails(actorObj.name);
+                const colorPickerRef = React.createRef();
+                return (
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    {icon ? (
+                      // <Tooltip title={actorObj.name}>
+                      <div style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column' }}>
+                        <div
+                          style={{
+                            width: '40px',
+                            height: '40px',
+                            backgroundColor: actorObj.color,
+                            opacity: actorObj.visibilityMode === 'visible' ? 1 : actorObj.visibilityMode === 'transparent' ? 0.7 : 0.4,
+                            maskImage: `url(${icon})`,
+                            maskSize: 'contain',
+                            maskRepeat: 'no-repeat',
+                            maskPosition: 'center',
+                            WebkitMaskImage: `url(${icon})`,
+                            WebkitMaskSize: 'contain',
+                            WebkitMaskRepeat: 'no-repeat',
+                            WebkitMaskPosition: 'center',
+                            cursor: 'pointer',
+                          }}
+                          onClick={() => toggleVisibility(index)}
+                          onContextMenu={(e) => {
+                            e.preventDefault();
+                            if (colorPickerRef.current) {
+                              colorPickerRef.current.click();
+                            }
+                          }}
+                        />
+                        <span onClick={() => toggleVisibility(index)} style={{ cursor: 'pointer', textAlign: 'center', fontSize: '12px' }}>{actorObj.name}</span>
+                        </div>
+                      // </Tooltip>
+                    ) : (
+                      <span onClick={() => toggleVisibility(index)} style={{ cursor: 'pointer', fontSize: '12px' }}>{actorObj.name}</span>
+                    )}
+                    <input
+                      ref={colorPickerRef}
+                      type="color"
+                      value={actorObj.color}
+                      onChange={(e) => handleColorChange(index, e.target.value)}
+                      style={{
+                        visibility: 'hidden',
+                        position: 'absolute',
+                        width: 0,
+                        height: 0
+                      }}
+                    />
+                  </div>
+                );
+              })()}
+
+            </div>
+          )))}
+        </div>
+    )}
+
 
       {/* Findings Panel */}
       {rendererInitialized && isFindingsVisible && (
@@ -1161,6 +1233,7 @@ const ObjFilesRenderer = (props) => {
           ))}
         </div>
       )}
+
     </div>
   );
 };
