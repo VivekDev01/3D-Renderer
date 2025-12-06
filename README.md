@@ -63,4 +63,4 @@ For each folder, a `manifest.json` file is created:
 1. Add new 3D model files to a folder in `public/3d-models/`
 2. Run `npm run generate-manifests`
 3. Start/refresh your app
-4. Navigate to `/render/{folder_name}`
+4. Navigate to `/render-local/{folder_name}`

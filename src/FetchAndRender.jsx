@@ -1,0 +1,61 @@
+import React, { useRef, useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import Lungs3D3 from "./components/Lungs3D3"
+import Liver from "./components/Liver"
+
+
+const FetchAndRender = () => {
+    const [renderingElements, setRenderingElements] = useState([]);
+    const [isRendered, setIsRendered] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const { path } = useParams();
+
+    let filePath = `/3d-models/${path}`;
+    console.log('File path:', filePath);
+
+    useEffect(() => {
+        const fetchAndProcessFiles = async () => {
+            try {
+                setLoading(true);
+                setError(null);
+
+                const response = await fetch(`http://localhost:5000/load-model/${path}`);
+
+                if (!response.ok) {
+                    throw new Error("Failed to load model from server");
+                }
+
+                const data = await response.json();
+
+                setRenderingElements(data.renderingElements);
+                setIsRendered(true);
+                setLoading(false);
+            } catch (err) {
+                console.error(err);
+                setError(err.message);
+                setLoading(false);
+            }
+        };
+
+        if (path) {
+            fetchAndProcessFiles();
+        }
+    }, [path, filePath]);
+
+    return (
+        <div>
+            {loading && <div style={{ textAlign: 'center', padding: '20px' }}>Loading 3D models...</div>}
+            {error && <div style={{ textAlign: 'center', padding: '20px', color: 'red' }}>Error: {error}</div>}
+            {isRendered && (
+                path.includes('liver') ? (
+                    <Liver path={path} renderingElements={renderingElements} />
+                ) : (
+                    <Lungs3D3 path={path} renderingElements={renderingElements} />
+                )
+            )}
+        </div>
+    );
+};
+
+export default FetchAndRender;
