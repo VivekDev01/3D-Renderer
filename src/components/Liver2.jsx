@@ -33,7 +33,7 @@ import MagicChange from '@mui/icons-material/AutoFixHigh';
 import CrossSection from '@mui/icons-material/Adjust';
 import RotationIcon from '@mui/icons-material/ThreeSixty';
 import PositionIcon from '@mui/icons-material/PictureInPicture';
-import LiverIcon from '../svgs/liver-svgrepo-com.svg';
+import LiverIcon from '../svgs/liver.svg';
 import TumorIcon from '../svgs/tumor.svg';
 import ArteryIcon from '../svgs/artery.svg';
 

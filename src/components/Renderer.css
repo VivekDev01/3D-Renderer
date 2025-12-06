@@ -5,24 +5,55 @@
    flex-direction: column;
 }
 
-.controls{
+.controls {
     position: absolute;
-    top: 50px;
+    top: 70px;
     left: 15px;
     z-index: 1;
-    background:transparent;
+    background: rgba(33, 33, 33, 0.3); /* Light pink with low opacity */
     display: flex;
     justify-content: space-evenly;
     align-items: flex-start;
     flex-direction: column;
-    width:250px;
-    height: 30%;
+    width: 80px;
+    height: 70%;
+    border-radius: 10px; /* optional but looks good */
+    backdrop-filter: blur(4px); /* optional for nice glass effect */
+    padding: 10px;
+    border: 1px solid #EB3678;
+    z-index: 1000;
+}
+
+.controls-hidden{
+    position: absolute;
+    top: 55px;
+    left: 2px;
+    z-index: 1;
+    background: rgba(33, 33, 33, 0.3); /* Light pink with low opacity */
+    display: flex;
+    justify-content: space-evenly;
+    align-items: flex-start;
+    flex-direction: column;
+    width: 80px;
+    height: 72%;
+    border-radius: 10px; /* optional but looks good */
+    backdrop-filter: blur(4px); /* optional for nice glass effect */
+    padding: 10px;
+    border: 1px solid #EB3678;
+    transform:translateX(40%);
+    transition:transform .2s ease-in;
+    z-index: 999;
+}
+
+.controls-hidden:hover{
+    transform:translateX(120%);
+    box-shadow:5px 0 10px 0px #EB3678;
 }
 
 .control-item{
     width: 100%;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     font-weight: bold;
 }
