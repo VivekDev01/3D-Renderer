@@ -1,6 +1,9 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import Liver3D from './components/Liver3D';
+import Lungs3D3 from "./components/Lungs3D3"
+import Lungs from "./components/Lungs"
+import Liver2 from "./components/Liver2"
 
 
 const OBJMTLFileRenderer = () => {
@@ -96,7 +99,13 @@ const OBJMTLFileRenderer = () => {
         <div>
             {loading && <div style={{ textAlign: 'center', padding: '20px' }}>Loading 3D models...</div>}
             {error && <div style={{ textAlign: 'center', padding: '20px', color: 'red' }}>Error: {error}</div>}
-            {isRendered && <Liver3D renderingElements={renderingElements} />}
+            {isRendered && (
+                path.includes('liver2') ? (
+                    <Liver2 renderingElements={renderingElements} />
+                ) : (
+                    <Lungs3D3 renderingElements={renderingElements} />
+                )
+            )}
         </div>
     );
 };
