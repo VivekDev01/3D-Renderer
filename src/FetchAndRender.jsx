@@ -24,7 +24,7 @@ const FetchAndRender = () => {
                 setLoading(true);
                 setError(null);
 
-                const response = await fetch(`${baseURL}/load-local-model/${path}`);
+                const response = await fetch(`${baseURL}/load-model/${path}`);
 
                 if (!response.ok) {
                     throw new Error("Failed to load model from server");
