@@ -145,10 +145,10 @@ const ObjFilesRenderer = (props) => {
         plane = vtkPlane.newInstance({ normal: [0, -1, 0], origin: [0, 0, 0] });
       }
       else if (selectedPlane === 'coronal') {
-        plane = vtkPlane.newInstance({ normal: [1, 0, 0], origin: [0, 0, 0] });
+        plane = vtkPlane.newInstance({ normal: [0, 0, -1], origin: [0, 0, 0] });
       }
       else if (selectedPlane === 'sagittal') {
-        plane = vtkPlane.newInstance({ normal: [0, 0, -1], origin: [0, 0, 0] });
+        plane = vtkPlane.newInstance({ normal: [1, 0, 0], origin: [0, 0, 0] });
       }
 
 
@@ -274,9 +274,9 @@ const ObjFilesRenderer = (props) => {
       if (selectedPlane === 'axial') {
         plane.setOrigin(0, bounds[3], 0);
       } else if (selectedPlane === 'coronal') {
-        plane.setOrigin(bounds[0], 0, 0);
-      } else if (selectedPlane === 'sagittal') {
         plane.setOrigin(0, 0, bounds[5]);
+      } else if (selectedPlane === 'sagittal') {
+        plane.setOrigin(bounds[0], 0, 0);
       }
 
       renderWindow.addView(openGLRenderWindow);
@@ -391,9 +391,9 @@ const ObjFilesRenderer = (props) => {
     if (selectedPlane === 'axial') {
       plane = vtkPlane.newInstance({ normal: [0, -1, 0], origin: [0, 0, 0] });
     } else if (selectedPlane === 'coronal') {
-      plane = vtkPlane.newInstance({ normal: [1, 0, 0], origin: [0, 0, 0] });
-    } else if (selectedPlane === 'sagittal') {
       plane = vtkPlane.newInstance({ normal: [0, 0, -1], origin: [0, 0, 0] });
+    } else if (selectedPlane === 'sagittal') {
+      plane = vtkPlane.newInstance({ normal: [1, 0, 0], origin: [0, 0, 0] });
     }
 
     updateClippingPlanes(plane);
@@ -416,7 +416,7 @@ const ObjFilesRenderer = (props) => {
           actor.getMapper().getClippingPlanes()[0].setOrigin(0, yValue, 0);
         });
       }
-      else if (selectedPlane === 'coronal') {
+      else if (selectedPlane === 'sagittal') {
         const xRange = bounds[1] - bounds[0]; // x-axis range of the bounding box
         // Calculate the xValue such that higher values correspond to the right side
         const xValue = bounds[0] + normalizedValue * xRange;
@@ -426,7 +426,7 @@ const ObjFilesRenderer = (props) => {
           actor.getMapper().getClippingPlanes()[0].setOrigin(xValue, 0, 0);
         });
       }
-      else if (selectedPlane === 'sagittal') {
+      else if (selectedPlane === 'coronal') {
         const zRange = bounds[4] - bounds[5]; // z-axis range of the bounding box
         // Calculate the zValue such that higher values correspond to the anterior side
         const zValue = bounds[5] + normalizedValue * zRange;
