@@ -90,6 +90,10 @@ const ObjFilesRenderer = (props) => {
   const [isMoreControlItemsVisible, setIsMoreControlItemsVisible] = useState(false);
   const [controlItemTypeToHide, setControlItemTypeToHide] = useState('Tumor');
 
+  // Mobile detection
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const [isSmallMobile, setIsSmallMobile] = useState(window.innerWidth <= 480);
+
   const demoFindings = {
     Liver: [
       "Volume: 1450 cc",
@@ -111,6 +115,17 @@ const ObjFilesRenderer = (props) => {
       "Variant anatomy: Michels Type I"
     ]
   };
+
+  // Handle window resize for mobile detection
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+      setIsSmallMobile(window.innerWidth <= 480);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   // Function to update clipping planes for all actors
   const updateClippingPlanes = (plane) => {
@@ -652,7 +667,12 @@ const ObjFilesRenderer = (props) => {
   return (
     <div className="container" style={{ position: 'relative' }} ref={pageContainerRef}>
 
-      <div style={{ position: 'absolute', top: '15px', right: '5px', zIndex: 1 }}>
+      <div style={{
+        position: 'absolute',
+        top: isMobile ? '10px' : '15px',
+        right: isMobile ? '3px' : '5px',
+        zIndex: 1
+      }}>
         {/* Change Property Value */}
         <Tooltip title="Change Property Value">
           <IconButton
@@ -664,8 +684,10 @@ const ObjFilesRenderer = (props) => {
               setIsFindingsVisible(false);
             }}
             title="Change Property Value"
+            size={isSmallMobile ? "small" : "medium"}
+            sx={{ padding: isMobile ? '4px' : '8px' }}
           >
-            <MagicChange sx={{ color: isChangePropertyValueFeatureEnabled ? '#EB3678' : "#fff" }} />
+            <MagicChange sx={{ color: isChangePropertyValueFeatureEnabled ? '#EB3678' : "#fff", fontSize: isSmallMobile ? '1.1rem' : (isMobile ? '1.3rem' : '1.5rem') }} />
           </IconButton>
         </Tooltip>
 
@@ -681,8 +703,10 @@ const ObjFilesRenderer = (props) => {
               setIsFindingsVisible(false);
             }}
             title="Cross Section"
+            size={isSmallMobile ? "small" : "medium"}
+            sx={{ padding: isMobile ? '4px' : '8px' }}
           >
-            <CrossSection sx={{ color: isCrossSectionFeatureEnabled ? '#EB3678' : "#fff" }} />
+            <CrossSection sx={{ color: isCrossSectionFeatureEnabled ? '#EB3678' : "#fff", fontSize: isSmallMobile ? '1.1rem' : (isMobile ? '1.3rem' : '1.5rem') }} />
           </IconButton>
         </Tooltip>
 
@@ -697,8 +721,10 @@ const ObjFilesRenderer = (props) => {
               setIsFindingsVisible(false);
             }}
             title="Change Position Value"
+            size={isSmallMobile ? "small" : "medium"}
+            sx={{ padding: isMobile ? '4px' : '8px' }}
           >
-            <PositionIcon sx={{ color: isChangePositionValueFeatureEnabled ? '#EB3678' : "#fff" }} />
+            <PositionIcon sx={{ color: isChangePositionValueFeatureEnabled ? '#EB3678' : "#fff", fontSize: isSmallMobile ? '1.1rem' : (isMobile ? '1.3rem' : '1.5rem') }} />
           </IconButton>
         </Tooltip>
 
@@ -709,8 +735,10 @@ const ObjFilesRenderer = (props) => {
             id="restore_btn"
             onClick={handdleRestore}
             title="Fullscreen"
+            size={isSmallMobile ? "small" : "medium"}
+            sx={{ padding: isMobile ? '4px' : '8px' }}
           >
-            <RestoreIcon sx={{ color: "#fff" }} />
+            <RestoreIcon sx={{ color: "#fff", fontSize: isSmallMobile ? '1.1rem' : (isMobile ? '1.3rem' : '1.5rem') }} />
           </IconButton>
         </Tooltip>
 
@@ -722,8 +750,10 @@ const ObjFilesRenderer = (props) => {
               id="rotation_btn"
               onClick={handleStopRotation}
               title="Stop Rotation"
+              size={isSmallMobile ? "small" : "medium"}
+              sx={{ padding: isMobile ? '4px' : '8px' }}
             >
-              <SyncDisabledOutlinedIcon sx={{ color: "#fff" }} onClick={handleStopRotation} />
+              <SyncDisabledOutlinedIcon sx={{ color: "#fff", fontSize: isSmallMobile ? '1.1rem' : (isMobile ? '1.3rem' : '1.5rem') }} onClick={handleStopRotation} />
             </IconButton>
           </Tooltip>
         ) : (
@@ -732,8 +762,10 @@ const ObjFilesRenderer = (props) => {
               id="rotation_btn"
               onClick={handleStartRotation}
               title="Start Rotation"
+              size={isSmallMobile ? "small" : "medium"}
+              sx={{ padding: isMobile ? '4px' : '8px' }}
             >
-              <AutorenewOutlinedIcon sx={{ color: "#fff" }} onClick={handleStartRotation} />
+              <AutorenewOutlinedIcon sx={{ color: "#fff", fontSize: isSmallMobile ? '1.1rem' : (isMobile ? '1.3rem' : '1.5rem') }} onClick={handleStartRotation} />
             </IconButton>
           </Tooltip>
         )}
@@ -744,8 +776,10 @@ const ObjFilesRenderer = (props) => {
             id="fullscreen_btn"
             onClick={handleFullscreen}
             title="Fullscreen"
+            size={isSmallMobile ? "small" : "medium"}
+            sx={{ padding: isMobile ? '4px' : '8px' }}
           >
-            <Fullscreen sx={{ color: "#fff" }} />
+            <Fullscreen sx={{ color: "#fff", fontSize: isSmallMobile ? '1.1rem' : (isMobile ? '1.3rem' : '1.5rem') }} />
           </IconButton>
         </Tooltip>
 
@@ -760,8 +794,10 @@ const ObjFilesRenderer = (props) => {
               setIsChangePositionValueFeatureEnabled(false);
             }}
             title="Show Findings"
+            size={isSmallMobile ? "small" : "medium"}
+            sx={{ padding: isMobile ? '4px' : '8px' }}
           >
-            <InfoOutlinedIcon sx={{ color: isFindingsVisible ? '#EB3678' : "#fff" }} />
+            <InfoOutlinedIcon sx={{ color: isFindingsVisible ? '#EB3678' : "#fff", fontSize: isSmallMobile ? '1.1rem' : (isMobile ? '1.3rem' : '1.5rem') }} />
           </IconButton>
         </Tooltip>
       </div>
@@ -774,17 +810,17 @@ const ObjFilesRenderer = (props) => {
           style={{
             color: 'white',
             position: 'absolute',
-            width: '7%',
-            top: '34%',
+            width: isMobile ? '25%' : '7%',
+            top: isMobile ? '28%' : '34%',
             right: '0px',
             zIndex: 1,
             display: 'flex',
             justifyContent: 'space-around',
-            height: "25%"
+            height: isMobile ? "auto" : "25%"
           }}>
           {actors.length > 0 && (
-            <FormControl variant="outlined" style={{ width: '100%', height: "20%", backgroundColor: 'gray', color: 'white' }}>
-              <InputLabel style={{ color: "white" }} id="demo-simple-select-label">Organ</InputLabel>
+            <FormControl variant="outlined" style={{ width: '100%', height: isMobile ? "auto" : "20%", backgroundColor: 'gray', color: 'white' }}>
+              <InputLabel style={{ color: "white", fontSize: isSmallMobile ? '0.75rem' : '1rem' }} id="demo-simple-select-label">Organ</InputLabel>
               <Select
                 value={selectedActor}
                 onChange={(e) => {
@@ -796,10 +832,10 @@ const ObjFilesRenderer = (props) => {
                   setRotationValueCoronal(0);
                   setRotationValueSagittal(0);
                 }}
-                style={{ color: 'white', backgroundColor: "#EB3678", width: "100%", height: "100%" }}
+                style={{ color: 'white', backgroundColor: "#EB3678", width: "100%", height: isMobile ? "35px" : "100%", fontSize: isSmallMobile ? '0.75rem' : '1rem' }}
               >
                 {actors.map((actorObj, index) => (
-                  <MenuItem key={index} value={index}>
+                  <MenuItem key={index} value={index} style={{ fontSize: isSmallMobile ? '0.75rem' : '1rem' }}>
                     {actorObj.name}
                   </MenuItem>
                 ))}
@@ -908,29 +944,29 @@ const ObjFilesRenderer = (props) => {
             justifyContent: "space-between",
             alignItems: 'center',
             flexDirection: "column",
-            top: '35%',
-            width: "7%",
+            top: isMobile ? '28%' : '35%',
+            width: isMobile ? "25%" : "7%",
             right: '0px',
-            height: '60%',
+            height: isMobile ? 'auto' : '60%',
             zIndex: 1
           }}>
           <FormControl variant="outlined" style={{ width: '100%', backgroundColor: 'gray', color: 'white' }}>
-            <InputLabel style={{ color: "white" }} id="demo-simple-select-label">Property</InputLabel>
+            <InputLabel style={{ color: "white", fontSize: isSmallMobile ? '0.7rem' : '1rem' }} id="demo-simple-select-label">Property</InputLabel>
             <Select
               value={selectedProperty}
               onChange={(e) => {
                 setSelectedProperty(e.target.value);
               }}
-              style={{ color: 'white', backgroundColor: "#EB3678", width: "100%", height: "35px" }}
+              style={{ color: 'white', backgroundColor: "#EB3678", width: "100%", height: "35px", fontSize: isSmallMobile ? '0.7rem' : '1rem' }}
             >
-              <MenuItem value='diffuse'>Diffuse</MenuItem>
-              <MenuItem value='specular'>Specular</MenuItem>
-              <MenuItem value='specularPower'>Specular Power</MenuItem>
-              <MenuItem value='specularColor'>Specular Color</MenuItem>
-              <MenuItem value='opacity'>Opacity</MenuItem>
-              <MenuItem value='ambient'>Ambient</MenuItem>
-              <MenuItem value='roughnessTexture'>Roughness Texture</MenuItem>
-              <MenuItem value='metallicTexture'>Metallic Texture</MenuItem>
+              <MenuItem value='diffuse' style={{ fontSize: isSmallMobile ? '0.7rem' : '1rem' }}>Diffuse</MenuItem>
+              <MenuItem value='specular' style={{ fontSize: isSmallMobile ? '0.7rem' : '1rem' }}>Specular</MenuItem>
+              <MenuItem value='specularPower' style={{ fontSize: isSmallMobile ? '0.7rem' : '1rem' }}>Specular Power</MenuItem>
+              <MenuItem value='specularColor' style={{ fontSize: isSmallMobile ? '0.7rem' : '1rem' }}>Specular Color</MenuItem>
+              <MenuItem value='opacity' style={{ fontSize: isSmallMobile ? '0.7rem' : '1rem' }}>Opacity</MenuItem>
+              <MenuItem value='ambient' style={{ fontSize: isSmallMobile ? '0.7rem' : '1rem' }}>Ambient</MenuItem>
+              <MenuItem value='roughnessTexture' style={{ fontSize: isSmallMobile ? '0.7rem' : '1rem' }}>Roughness Texture</MenuItem>
+              <MenuItem value='metallicTexture' style={{ fontSize: isSmallMobile ? '0.7rem' : '1rem' }}>Metallic Texture</MenuItem>
             </Select>
           </FormControl>
           <input
@@ -946,13 +982,13 @@ const ObjFilesRenderer = (props) => {
             }}
             style={{
               position: 'absolute',
-              top: '140px',
+              top: isMobile ? '100px' : '140px',
               transform: 'rotate(-90deg)',
               zIndex: 20000,
-              width: '190px',
+              width: isMobile ? '120px' : '190px',
             }}
           />
-          <span style={{ color: 'white', position: 'absolute', top: "260px" }}>{selectedPropertyValue[selectedProperty]}</span>
+          <span style={{ color: 'white', position: 'absolute', top: isMobile ? "200px" : "260px", fontSize: isSmallMobile ? '0.8rem' : '1rem' }}>{selectedPropertyValue[selectedProperty]}</span>
         </div>
       )}
 
@@ -967,17 +1003,17 @@ const ObjFilesRenderer = (props) => {
             justifyContent: "space-around",
             alignItems: 'center',
             flexDirection: "column",
-            top: '27%',
-            width: "7%",
+            top: isMobile ? '25%' : '27%',
+            width: isMobile ? "25%" : "7%",
             right: '0px',
-            height: '40%',
+            height: isMobile ? 'auto' : '40%',
             zIndex: 1
           }}
         >
           <FormControl variant="outlined" style={{ width: '100%', backgroundColor: 'gray', color: 'white' }}>
-            <InputLabel style={{ color: "white" }} id="demo-simple-select-label">Cross section</InputLabel>
+            <InputLabel style={{ color: "white", fontSize: isSmallMobile ? '0.7rem' : '1rem' }} id="demo-simple-select-label">Cross section</InputLabel>
             <Select
-              style={{ color: 'white', backgroundColor: "#EB3678", width: "100%", height: "35px" }}
+              style={{ color: 'white', backgroundColor: "#EB3678", width: "100%", height: "35px", fontSize: isSmallMobile ? '0.7rem' : '1rem' }}
               id="demo-simple-select"
               value={selectedPlane}
               label="Search by:"
@@ -986,9 +1022,9 @@ const ObjFilesRenderer = (props) => {
                 setScrollValue(0);
               }}
             >
-              <MenuItem value='axial'>Axial</MenuItem>
-              <MenuItem value='coronal'>Coronal</MenuItem>
-              <MenuItem value='sagittal'>Sagittal</MenuItem>
+              <MenuItem value='axial' style={{ fontSize: isSmallMobile ? '0.7rem' : '1rem' }}>Axial</MenuItem>
+              <MenuItem value='coronal' style={{ fontSize: isSmallMobile ? '0.7rem' : '1rem' }}>Coronal</MenuItem>
+              <MenuItem value='sagittal' style={{ fontSize: isSmallMobile ? '0.7rem' : '1rem' }}>Sagittal</MenuItem>
             </Select>
           </FormControl>
           <input
@@ -1005,6 +1041,8 @@ const ObjFilesRenderer = (props) => {
             style={{
               transform: 'rotate(-90deg)',
               zIndex: 2,
+              width: isMobile ? '120px' : '200px',
+              marginTop: isMobile ? '80px' : '0px'
             }}
           />
         </div>
@@ -1019,11 +1057,25 @@ const ObjFilesRenderer = (props) => {
 
 
       {/* controls icon to hide and show */}
-      <div style={{ position: 'absolute', top: '15px', left: '40px', zIndex: 1 }}>
+      <div style={{ position: 'absolute', top: isMobile ? '10px' : '15px', left: isMobile ? '5px' : '40px', zIndex: 1 }}>
         {isControlsVisible ? (
-          <FilterListOutlinedIcon style={{ color: 'white', cursor: 'pointer' }} onClick={() => setIsControlsVisible(false)} />
+          <FilterListOutlinedIcon
+            style={{
+              color: 'white',
+              cursor: 'pointer',
+              fontSize: isSmallMobile ? '1.3rem' : (isMobile ? '1.5rem' : '1.75rem')
+            }}
+            onClick={() => setIsControlsVisible(false)}
+          />
         ) : (
-          <FilterListOffOutlinedIcon style={{ color: 'white', cursor: 'pointer' }} onClick={() => setIsControlsVisible(true)} />
+          <FilterListOffOutlinedIcon
+            style={{
+              color: 'white',
+              cursor: 'pointer',
+              fontSize: isSmallMobile ? '1.3rem' : (isMobile ? '1.5rem' : '1.75rem')
+            }}
+            onClick={() => setIsControlsVisible(true)}
+          />
         )}
       </div>
 
@@ -1044,8 +1096,8 @@ const ObjFilesRenderer = (props) => {
                         <div style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column' }}>
                           <div
                             style={{
-                              width: '40px',
-                              height: '40px',
+                              width: isMobile ? (isSmallMobile ? '32px' : '36px') : '40px',
+                              height: isMobile ? (isSmallMobile ? '32px' : '36px') : '40px',
                               backgroundColor: actorObj.color,
                               opacity: actorObj.visibilityMode === 'visible' ? 1 : actorObj.visibilityMode === 'transparent' ? 0.7 : 0.4,
                               maskImage: `url(${icon})`,
@@ -1067,11 +1119,11 @@ const ObjFilesRenderer = (props) => {
                               }
                             }}
                           />
-                          <span onClick={() => toggleVisibility(index)} style={{ cursor: 'pointer', textAlign: 'center', fontSize: '12px' }}>{actorObj.name}</span>
+                          <span onClick={() => toggleVisibility(index)} style={{ cursor: 'pointer', textAlign: 'center', fontSize: isMobile ? (isSmallMobile ? '9px' : '10px') : '12px' }}>{actorObj.name}</span>
                         </div>
                         // </Tooltip>
                       ) : (
-                        <span onClick={() => toggleVisibility(index)} style={{ cursor: 'pointer', fontSize: '12px' }}>{actorObj.name}</span>
+                        <span onClick={() => toggleVisibility(index)} style={{ cursor: 'pointer', fontSize: isMobile ? (isSmallMobile ? '9px' : '10px') : '12px' }}>{actorObj.name}</span>
                       )}
                       <input
                         ref={colorPickerRef}
@@ -1110,8 +1162,8 @@ const ObjFilesRenderer = (props) => {
                         <div style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column' }}>
                           <div
                             style={{
-                              width: '40px',
-                              height: '40px',
+                              width: isMobile ? (isSmallMobile ? '32px' : '36px') : '40px',
+                              height: isMobile ? (isSmallMobile ? '32px' : '36px') : '40px',
                               backgroundColor: actorObj.color,
                               opacity: actorObj.visibilityMode === 'visible' ? 1 : actorObj.visibilityMode === 'transparent' ? 0.7 : 0.4,
                               maskImage: `url(${icon})`,
@@ -1132,11 +1184,11 @@ const ObjFilesRenderer = (props) => {
                               }
                             }}
                           />
-                          <span onClick={() => toggleVisibility(index)} style={{ cursor: 'pointer', textAlign: 'center', fontSize: '12px' }}>{actorObj.name}</span>
+                          <span onClick={() => toggleVisibility(index)} style={{ cursor: 'pointer', textAlign: 'center', fontSize: isMobile ? (isSmallMobile ? '9px' : '10px') : '12px' }}>{actorObj.name}</span>
                         </div>
                         // </Tooltip>
                       ) : (
-                        <span onClick={() => toggleVisibility(index)} style={{ cursor: 'pointer', fontSize: '12px' }}>{actorObj.name}</span>
+                        <span onClick={() => toggleVisibility(index)} style={{ cursor: 'pointer', fontSize: isMobile ? (isSmallMobile ? '9px' : '10px') : '12px' }}>{actorObj.name}</span>
                       )}
                       <input
                         ref={colorPickerRef}
@@ -1166,18 +1218,18 @@ const ObjFilesRenderer = (props) => {
         <div
           style={{
             position: 'absolute',
-            top: '10%',
-            right: '20px',
-            width: '320px',
+            top: isMobile ? '8%' : '10%',
+            right: isMobile ? '5px' : '20px',
+            width: isMobile ? (isSmallMobile ? '85%' : '60%') : '320px',
             backgroundColor: 'rgba(20, 20, 20, 0.85)',
             backdropFilter: 'blur(16px)',
-            borderRadius: '20px',
-            padding: '25px',
+            borderRadius: isMobile ? '15px' : '20px',
+            padding: isMobile ? '15px' : '25px',
             color: 'white',
             boxShadow: '0 10px 40px rgba(0, 0, 0, 0.5)',
             border: '1px solid rgba(255, 255, 255, 0.1)',
             zIndex: 10,
-            maxHeight: '75%',
+            maxHeight: isMobile ? '70%' : '75%',
             overflowY: 'auto',
             fontFamily: '"Roboto", sans-serif',
             animation: 'fadeIn 0.3s ease-out',
@@ -1188,13 +1240,13 @@ const ObjFilesRenderer = (props) => {
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
-            marginBottom: '20px',
+            marginBottom: isMobile ? '15px' : '20px',
             borderBottom: '2px solid rgba(235, 54, 120, 0.5)',
-            paddingBottom: '10px'
+            paddingBottom: isMobile ? '8px' : '10px'
           }}>
             <h2 style={{
               margin: 0,
-              fontSize: '1.4rem',
+              fontSize: isMobile ? (isSmallMobile ? '1.1rem' : '1.2rem') : '1.4rem',
               fontWeight: 700,
               color: '#fff',
               letterSpacing: '0.5px'
@@ -1206,16 +1258,17 @@ const ObjFilesRenderer = (props) => {
           {/* Liver Volume Hero Card */}
           <div style={{
             background: 'linear-gradient(135deg, rgba(235, 54, 120, 0.2), rgba(235, 54, 120, 0.05))',
-            borderRadius: '16px',
-            padding: '20px',
-            marginBottom: '25px',
+            borderRadius: isMobile ? '12px' : '16px',
+            padding: isMobile ? '15px' : '20px',
+            marginBottom: isMobile ? '15px' : '25px',
             border: '1px solid rgba(235, 54, 120, 0.3)',
             display: 'flex',
             alignItems: 'center',
             boxShadow: '0 4px 15px rgba(0,0,0,0.2)'
           }}>
             <div style={{
-              width: '48px', height: '48px',
+              width: isMobile ? '36px' : '48px',
+              height: isMobile ? '36px' : '48px',
               maskImage: `url(${LiverIcon})`,
               WebkitMaskImage: `url(${LiverIcon})`,
               maskSize: 'contain',
@@ -1223,25 +1276,25 @@ const ObjFilesRenderer = (props) => {
               backgroundColor: '#EB3678',
               maskRepeat: 'no-repeat',
               WebkitMaskRepeat: 'no-repeat',
-              marginRight: '15px'
+              marginRight: isMobile ? '10px' : '15px'
             }}></div>
             <div>
-              <div style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.7)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '4px' }}>Liver Volume</div>
-              <div style={{ fontSize: '1.6rem', fontWeight: '800', lineHeight: 1 }}>{props.details.liver_volume}</div>
+              <div style={{ fontSize: isMobile ? '0.7rem' : '0.85rem', color: 'rgba(255,255,255,0.7)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '4px' }}>Liver Volume</div>
+              <div style={{ fontSize: isMobile ? '1.3rem' : '1.6rem', fontWeight: '800', lineHeight: 1 }}>{props.details.liver_volume}</div>
             </div>
           </div>
 
-          <h3 style={{ fontSize: '1.0rem', marginBottom: '15px', color: '#EB3678', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 600 }}>Tumor Breakdown</h3>
+          <h3 style={{ fontSize: isMobile ? '0.85rem' : '1.0rem', marginBottom: isMobile ? '10px' : '15px', color: '#EB3678', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 600 }}>Tumor Breakdown</h3>
 
           {/* Tumors List */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: isMobile ? '10px' : '15px' }}>
             {Object.entries(props.details).filter(([key]) => key.startsWith('tumor')).map(([key, data], index) => {
               const tumorNum = key.split('_')[1];
               return (
                 <div key={key} style={{
                   backgroundColor: 'rgba(255, 255, 255, 0.03)',
-                  borderRadius: '12px',
-                  padding: '15px',
+                  borderRadius: isMobile ? '10px' : '12px',
+                  padding: isMobile ? '12px' : '15px',
                   borderLeft: '4px solid #FF8A80',
                   transition: 'background-color 0.2s',
                   cursor: 'default'
@@ -1249,9 +1302,10 @@ const ObjFilesRenderer = (props) => {
                   onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.08)'}
                   onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.03)'}
                 >
-                  <div style={{ display: 'flex', alignItems: 'center', marginBottom: '12px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', marginBottom: isMobile ? '10px' : '12px' }}>
                     <div style={{
-                      width: '20px', height: '20px',
+                      width: isMobile ? '16px' : '20px',
+                      height: isMobile ? '16px' : '20px',
                       maskImage: `url(${TumorIcon})`,
                       WebkitMaskImage: `url(${TumorIcon})`,
                       maskSize: 'contain',
@@ -1259,26 +1313,26 @@ const ObjFilesRenderer = (props) => {
                       maskRepeat: 'no-repeat',
                       WebkitMaskRepeat: 'no-repeat',
                       backgroundColor: '#FF8A80',
-                      marginRight: '10px'
+                      marginRight: isMobile ? '8px' : '10px'
                     }} />
-                    <span style={{ fontWeight: '700', fontSize: '1.0rem', color: '#fff' }}>Tumor {tumorNum}</span>
+                    <span style={{ fontWeight: '700', fontSize: isMobile ? '0.9rem' : '1.0rem', color: '#fff' }}>Tumor {tumorNum}</span>
                   </div>
 
                   <div style={{
                     display: 'grid',
                     gridTemplateColumns: '1fr 1fr',
-                    gap: '10px',
-                    fontSize: '0.8rem'
+                    gap: isMobile ? '8px' : '10px',
+                    fontSize: isMobile ? '0.7rem' : '0.8rem'
                   }}>
-                    <div style={{ background: 'rgba(0,0,0,0.2)', padding: '8px', borderRadius: '8px' }}>
+                    <div style={{ background: 'rgba(0,0,0,0.2)', padding: isMobile ? '6px' : '8px', borderRadius: isMobile ? '6px' : '8px' }}>
                       <span style={{ display: 'block', color: 'rgba(255,255,255,0.5)', marginBottom: '4px' }}>Volume</span>
                       <span style={{ fontWeight: '600', color: '#fff' }}>{data.volume}</span>
                     </div>
-                    <div style={{ background: 'rgba(0,0,0,0.2)', padding: '8px', borderRadius: '8px' }}>
+                    <div style={{ background: 'rgba(0,0,0,0.2)', padding: isMobile ? '6px' : '8px', borderRadius: isMobile ? '6px' : '8px' }}>
                       <span style={{ display: 'block', color: 'rgba(255,255,255,0.5)', marginBottom: '4px' }}>Max Diameter</span>
                       <span style={{ fontWeight: '600', color: '#fff' }}>{data.maximum_diameter}</span>
                     </div>
-                    <div style={{ gridColumn: '1 / -1', background: 'rgba(0,0,0,0.2)', padding: '8px', borderRadius: '8px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div style={{ gridColumn: '1 / -1', background: 'rgba(0,0,0,0.2)', padding: isMobile ? '6px' : '8px', borderRadius: isMobile ? '6px' : '8px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                       <span style={{ color: 'rgba(255,255,255,0.5)' }}>Distance to Artery</span>
                       <span style={{ fontWeight: '600', color: '#fff' }}>{data.nearest_artery_distance}</span>
                     </div>
