@@ -540,9 +540,9 @@ const ObjFilesRenderer = (props) => {
       if (plane === 'axial') {
         newPos = [currentPos[0], newValue, currentPos[2]];
       } else if (plane === 'coronal') {
-        newPos = [newValue, currentPos[1], currentPos[2]];
-      } else if (plane === 'sagittal') {
         newPos = [currentPos[0], currentPos[1], newValue];
+      } else if (plane === 'sagittal') {
+        newPos = [newValue, currentPos[1], currentPos[2]];
       }
 
       vtkActor.setPosition(...newPos);
@@ -913,7 +913,7 @@ const ObjFilesRenderer = (props) => {
               value={rotationValueCoronal}
               min={-180}
               max={180}
-              onChange={(event) => updateActorRotation(parseInt(event.target.value), 'y')}
+              onChange={(event) => updateActorRotation(parseInt(event.target.value), 'z')}
               aria-labelledby="rotation-slider"
               className="horizontal-slider"
             />
@@ -926,7 +926,7 @@ const ObjFilesRenderer = (props) => {
               value={rotationValueSagittal}
               min={-180}
               max={180}
-              onChange={(event) => updateActorRotation(parseInt(event.target.value), 'z')}
+              onChange={(event) => updateActorRotation(parseInt(event.target.value), 'y')}
               aria-labelledby="rotation-slider"
               className="horizontal-slider"
             />
